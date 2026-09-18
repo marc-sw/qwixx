@@ -4,10 +4,40 @@ import 'package:qwixx/ui/home/view_model/game_discovery_view_model.dart';
 
 final _discoveryList = GlobalKey<AnimatedListState>();
 
+String formatDuration(Duration duration) {
+  final s = duration.inSeconds;
+  if (s < 60) {
+    if (s == 1) {
+      return '$s Sekunde';
+    }
+    return '$s Sekunden';
+  }
+  final m = duration.inMinutes;
+  if (m < 60) {
+    if (m == 1) {
+      return '$m Minute';
+    }
+    return '$m Minuten';
+  }
+  final h = duration.inHours;
+  if (h < 24) {
+    if (h == 1) {
+      return '$h Stunde';
+    }
+    return '$h Stunden';
+  }
+  final d = duration.inDays;
+  if (d == 1) {
+    return '$d Tag';
+  }
+  return '$d Tagen';
+}
+
 class GameDiscoveryWidget extends StatefulWidget {
   final GameDiscoveryViewModel viewModel;
+  final bool runOnStart;
 
-  const new({super.key, required this.viewModel});
+  const new({super.key, required this.viewModel, this.runOnStart = false});
 
   @override
   State<GameDiscoveryWidget> createState() => _GameDiscoveryWidgetState();
@@ -19,6 +49,10 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
     super.initState();
     widget.viewModel.afterAdd = _afterAdd;
     widget.viewModel.beforeRemove = _beforeRemove;
+
+    if (widget.runOnStart) {
+      widget.viewModel.start();
+    }
   }
 
   @override
@@ -43,85 +77,80 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
   }
 
   Widget _buildInfo(ServerInfo info) {
-    return ListTile(
-      leading: Text('Spiel von ${info.host.name}'),
-      title: Text('seit ${DateTime.now().difference(info.createdAt)}'),
-      trailing: IconButton(
-        onPressed: () => widget.viewModel.join(info),
-        icon: Icon(Icons.login),
+    final duration = DateTime.now().difference(info.createdAt);
+    final formatted = formatDuration(duration);
+    return Padding(
+      padding: const EdgeInsetsGeometry.symmetric(horizontal: 10),
+      child: Row(
+        spacing: 10,
+        children: [
+          Expanded(child: Text('Spiel von ${info.host.name}')),
+          Text('vor $formatted'),
+          IconButton(
+            onPressed: () => widget.viewModel.join(info),
+            icon: Icon(Icons.login),
+          ),
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(15),
-      child: ConstrainedBox(
-        constraints: BoxConstraints.loose(Size(400, 600)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              ListTile(
-                leading: Icon(Icons.wifi_find),
-                title: Text('Offene Spiele'),
-                trailing: ValueListenableBuilder(
-                  valueListenable: widget.viewModel.discoveringListenable,
-                  builder: (context, discovering, child) {
-                    if (discovering) {
-                      return Row(
-                        spacing: 10,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: widget.viewModel.stop,
-                            icon: Icon(Icons.stop),
-                          ),
-                          CircularProgressIndicator(),
-                        ],
-                      );
-                    }
-                    return IconButton(
-                      onPressed: () => widget.viewModel.start(),
-                      icon: Icon(Icons.play_arrow),
-                    );
-                  },
-                ),
-              ),
-              const Divider(thickness: 2),
-              Expanded(
-                child: ValueListenableBuilder(
-                  valueListenable: widget.viewModel.serverInfosListenable,
-                  builder: (context, infos, child) {
-                    return AnimatedList.separated(
-                      key: _discoveryList,
-                      initialItemCount: infos.length,
-                      itemBuilder: (context, index, animation) =>
-                          SlideTransition(
-                            position: animation.drive(
-                              Tween<Offset>(
-                                begin: const Offset(1, 0),
-                                end: Offset.zero,
-                              ),
-                            ),
-                            child: FadeTransition(
-                              opacity: animation,
-                              child: _buildInfo(infos[index]),
-                            ),
-                          ),
-                      separatorBuilder: (context, index, animation) =>
-                          SizedBox(height: 10),
-                      removedSeparatorBuilder: (context, index, animation) =>
-                          SizedBox(height: 10),
-                    );
-                  },
-                ),
-              ),
-            ],
+    return Column(
+      children: [
+        ListTile(
+          leading: Icon(Icons.wifi_find),
+          title: Text('Suche Spiele'),
+          trailing: ValueListenableBuilder(
+            valueListenable: widget.viewModel.discoveringListenable,
+            builder: (context, discovering, child) {
+              if (discovering) {
+                return Row(
+                  spacing: 10,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: widget.viewModel.stop,
+                      icon: Icon(Icons.stop),
+                    ),
+                    CircularProgressIndicator(),
+                  ],
+                );
+              }
+              return IconButton(
+                onPressed: () => widget.viewModel.start(),
+                icon: Icon(Icons.play_arrow),
+              );
+            },
           ),
         ),
-      ),
+        const Divider(thickness: 2),
+        Expanded(
+          child: ValueListenableBuilder(
+            valueListenable: widget.viewModel.serverInfosListenable,
+            builder: (context, infos, child) {
+              return AnimatedList.separated(
+                key: _discoveryList,
+                initialItemCount: infos.length,
+                itemBuilder: (context, index, animation) => SlideTransition(
+                  position: animation.drive(
+                    Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero),
+                  ),
+                  child: FadeTransition(
+                    opacity: animation,
+                    child: _buildInfo(infos[index]),
+                  ),
+                ),
+                separatorBuilder: (context, index, animation) =>
+                    SizedBox(height: 10),
+                removedSeparatorBuilder: (context, index, animation) =>
+                    SizedBox(height: 10),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

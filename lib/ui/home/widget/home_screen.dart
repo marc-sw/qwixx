@@ -47,17 +47,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _dialogBuilder(BuildContext context) {
+  Future<void> _dialogBuilder(BuildContext context, Widget child) {
     return showDialog(
       context: context,
       builder: (context) {
         return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(16),
+            borderRadius: BorderRadiusGeometry.circular(12),
           ),
           constraints: BoxConstraints.loose(Size(450, 700)),
           child: SizedBox.expand(
-            child: SettingsWidget(viewModel: widget.settingsViewModel),
+            child: Padding(padding: const EdgeInsets.all(8.0), child: child),
           ),
         );
       },
@@ -73,37 +74,45 @@ class _HomeScreenState extends State<HomeScreen> {
         ElevatedButton.icon(
           icon: Icon(Icons.settings),
           label: Text('Einstellungen'),
-          onPressed: () => _dialogBuilder(context),
+          onPressed: () => _dialogBuilder(
+            context,
+            SettingsWidget(viewModel: widget.settingsViewModel),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildActions(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        child: ConstrainedBox(
-          constraints: BoxConstraints.loose(Size.fromWidth(150)),
+  Widget _buildActionsV2(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints.loose(Size(200, 200)),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsetsGeometry.all(8),
           child: Column(
             spacing: 10,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Spiel erstellen', style: TextTheme.of(context).bodyLarge),
+              Text('Spielen', style: TextTheme.of(context).bodyLarge),
               const Divider(thickness: 2),
               ElevatedButton(
                 onPressed: () {
-                  widget.viewModel.onSoloLobbyTap();
+                  _dialogBuilder(context, _buildLobbyCreator(context));
                 },
-                child: Text('Singleplayer'),
+                child: Text('Erstellen'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  widget.viewModel.onMultiLobbyTap();
+                  _dialogBuilder(
+                    context,
+                    GameDiscoveryWidget(
+                      viewModel: widget.gameDiscoveryViewModel,
+                      runOnStart: true,
+                    ),
+                  );
                 },
-                child: Text('Multiplayer'),
+                child: Text('Beitreten'),
               ),
+              Expanded(child: SizedBox()),
             ],
           ),
         ),
@@ -118,15 +127,43 @@ class _HomeScreenState extends State<HomeScreen> {
         if (user == null) {
           return _buildSetup(context);
         }
-        return child!;
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: _buildActionsV2(context),
+        );
       },
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildActions(context),
-          GameDiscoveryWidget(viewModel: widget.gameDiscoveryViewModel),
-        ],
-      ),
+    );
+  }
+
+  Widget _buildLobbyCreator(BuildContext context) {
+    return Column(
+      spacing: 10,
+      children: [
+        ListTile(title: Text('Spiel erstellen')),
+        const Divider(thickness: 2),
+        Padding(
+          padding: const EdgeInsetsGeometry.symmetric(horizontal: 10),
+          child: Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: widget.viewModel.onSoloLobbyTap,
+                  child: Text('Alleine'),
+                ),
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: widget.viewModel.onMultiLobbyTap,
+                  child: Text('Mit anderen'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -151,7 +188,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           IconButton(
-            onPressed: () => _dialogBuilder(context),
+            onPressed: () => _dialogBuilder(
+              context,
+              SettingsWidget(viewModel: widget.settingsViewModel),
+            ),
             icon: Icon(Icons.settings),
           ),
         ],

@@ -145,7 +145,7 @@ class CardWidget extends StatelessWidget {
       children: [
         Text(
           player.name,
-          style: TextTheme.of(context).headlineSmall!.copyWith(
+          style: TextTheme.of(context).bodyLarge!.copyWith(
             color: player.uuid == viewModel.playerId ? Colors.green : null,
           ),
           textAlign: TextAlign.center,

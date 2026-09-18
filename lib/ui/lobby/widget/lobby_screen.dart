@@ -96,7 +96,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
       constraints: BoxConstraints.loose(Size(500, 700)),
       child: SizedBox.expand(
         child: Card(
-          margin: EdgeInsets.all(8),
+          margin: EdgeInsets.all(16),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ValueListenableBuilder(
@@ -181,9 +181,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Lobby'), centerTitle: true),
-      body: Center(child: _buildLobbyFound(context)),
-    );
+    return Scaffold(body: Center(child: _buildLobbyFound(context)));
   }
 }

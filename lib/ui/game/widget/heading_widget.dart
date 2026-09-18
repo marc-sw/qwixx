@@ -27,7 +27,7 @@ class HeadingWidget extends StatelessWidget {
           child: Text(
             key: Key(text),
             text,
-            style: TextTheme.of(context).headlineSmall,
+            style: TextTheme.of(context).bodyLarge,
             textAlign: TextAlign.center,
           ),
         );

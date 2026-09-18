@@ -124,6 +124,7 @@ class _GameScreenState extends State<GameScreen> {
         appBar: AppBar(
           title: HeadingWidget(viewModel: widget.viewModel),
           centerTitle: true,
+          actionsPadding: EdgeInsets.only(right: 10),
           actions: [
             IconButton(onPressed: _showResult, icon: Icon(Icons.leaderboard)),
           ],
