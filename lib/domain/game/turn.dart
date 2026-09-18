@@ -1,19 +1,21 @@
-import 'dart:collection';
+part of 'game.dart';
 
-import 'package:qwixx/domain/game/action.dart';
-
+@JsonSerializable(explicitToJson: true)
 class GameTurn {
-  final int _activeCardIndex;
-  final ActionResult _coloredDiceResult;
-  final List<ActionResult> _whiteDiceResults;
-  final bool _rolled;
+  final int activeCardIndex;
+  final ActionResult coloredDiceResult;
+  final List<ActionResult> whiteDiceResults;
+  final bool rolled;
 
   const GameTurn(
-    this._activeCardIndex,
-    this._coloredDiceResult,
-    this._whiteDiceResults,
-    this._rolled,
+    this.activeCardIndex,
+    this.coloredDiceResult,
+    this.whiteDiceResults,
+    this.rolled,
   );
+  factory GameTurn.fromJson(Map<String, dynamic> json) =>
+      _$GameTurnFromJson(json);
+  Map<String, dynamic> toJson() => _$GameTurnToJson(this);
 
   factory GameTurn.init(int startingCardIndex, int cardCount) {
     return GameTurn(
@@ -24,12 +26,6 @@ class GameTurn {
     );
   }
 
-  int get activeCardIndex => _activeCardIndex;
-  ActionResult get coloredDiceResult => _coloredDiceResult;
-  List<ActionResult> get whiteDiceResults =>
-      UnmodifiableListView(_whiteDiceResults);
-  bool get rolled => _rolled;
-
   bool isAwaitingAction(int cardIndex) {
     if (whiteDiceResults[cardIndex] == ActionResult.awaiting) {
       return true;
@@ -39,78 +35,75 @@ class GameTurn {
   }
 
   bool isFailThrow(int cardIndex) {
-    return cardIndex == _activeCardIndex &&
-        _coloredDiceResult == ActionResult.skipped &&
-        _whiteDiceResults[cardIndex] == ActionResult.skipped;
+    return cardIndex == activeCardIndex &&
+        coloredDiceResult == ActionResult.skipped &&
+        whiteDiceResults[cardIndex] == ActionResult.skipped;
   }
 
   bool isDone() {
-    return _coloredDiceResult != ActionResult.awaiting &&
-        !_whiteDiceResults.any((result) => result == ActionResult.awaiting);
+    return coloredDiceResult != ActionResult.awaiting &&
+        !whiteDiceResults.any((result) => result == ActionResult.awaiting);
   }
 
   bool canMarkWithColoredDice(int cardIndex) {
-    return cardIndex == _activeCardIndex &&
-        _coloredDiceResult == ActionResult.awaiting;
+    return cardIndex == activeCardIndex &&
+        coloredDiceResult == ActionResult.awaiting;
   }
 
   bool canMarkWithWhiteDice(int cardIndex) {
-    return _whiteDiceResults[cardIndex] == ActionResult.awaiting;
+    return whiteDiceResults[cardIndex] == ActionResult.awaiting;
   }
 
   bool didAnyAction(int cardIndex) {
-    return _whiteDiceResults[cardIndex] != ActionResult.awaiting ||
-        _activeCardIndex == cardIndex &&
-            _coloredDiceResult != ActionResult.awaiting;
+    return whiteDiceResults[cardIndex] != ActionResult.awaiting ||
+        activeCardIndex == cardIndex &&
+            coloredDiceResult != ActionResult.awaiting;
   }
 
   bool isActiveCard(int cardIndex) {
-    return _activeCardIndex == cardIndex;
+    return activeCardIndex == cardIndex;
   }
 
   GameTurn skipAction(int cardIndex) {
-    List<ActionResult> white = _whiteDiceResults;
-    if (_whiteDiceResults[cardIndex] == ActionResult.awaiting) {
-      white = List.from(_whiteDiceResults);
+    List<ActionResult> white = whiteDiceResults;
+    if (whiteDiceResults[cardIndex] == ActionResult.awaiting) {
+      white = List.from(whiteDiceResults);
       white[cardIndex] = ActionResult.skipped;
     }
 
-    ActionResult colored = _coloredDiceResult;
+    ActionResult colored = coloredDiceResult;
     if (cardIndex == activeCardIndex &&
-        _coloredDiceResult == ActionResult.awaiting) {
+        coloredDiceResult == ActionResult.awaiting) {
       colored = ActionResult.skipped;
     }
-    return GameTurn(_activeCardIndex, colored, white, _rolled);
+    return GameTurn(activeCardIndex, colored, white, rolled);
   }
 
   GameTurn nextTurn() {
-    final int nextCardIndex = (_activeCardIndex + 1) % _whiteDiceResults.length;
+    final int nextCardIndex = (activeCardIndex + 1) % whiteDiceResults.length;
     return GameTurn(
       nextCardIndex,
       ActionResult.awaiting,
-      List<ActionResult>.filled(
-        _whiteDiceResults.length,
-        ActionResult.awaiting,
-      ),
+      List<ActionResult>.filled(whiteDiceResults.length, ActionResult.awaiting),
       false,
     );
   }
 
   GameTurn setColoredActionResult(ActionResult result) {
-    return GameTurn(_activeCardIndex, result, _whiteDiceResults, _rolled);
+    return GameTurn(activeCardIndex, result, whiteDiceResults, rolled);
   }
 
   GameTurn setWhiteActionResult(int cardIndex, ActionResult result) {
-    final newResults = List<ActionResult>.from(_whiteDiceResults);
+    final newResults = List<ActionResult>.from(whiteDiceResults);
     newResults[cardIndex] = result;
-    return GameTurn(_activeCardIndex, _coloredDiceResult, newResults, _rolled);
+    return GameTurn(activeCardIndex, coloredDiceResult, newResults, rolled);
   }
 
   GameTurn setRolled(bool rolled) {
     return GameTurn(
-      _activeCardIndex,
-      _coloredDiceResult,
-      _whiteDiceResults,
+      activeCardIndex,
+      coloredDiceResult,
+      whiteDiceResults,
       rolled,
     );
   }

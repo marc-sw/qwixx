@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qwixx/config/routing.dart';
 import 'package:qwixx/domain/lobby/lobby.dart';
+import 'package:qwixx/domain/lobby/player.dart';
 import 'package:qwixx/ui/lobby/view_model/lobby_view_model.dart';
 
-final _myListKey = GlobalKey<AnimatedListState>();
+IconData fromPlayerKind(PlayerKind kind) {
+  return switch (kind) {
+    PlayerKind.host => Icons.admin_panel_settings,
+    PlayerKind.client => Icons.laptop,
+    PlayerKind.bot => Icons.smart_toy,
+  };
+}
 
 class LobbyScreen extends StatefulWidget {
   const new({super.key, required this.viewModel});
@@ -70,30 +77,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
         textColor: widget.viewModel.isUser(lobby.all[playerIndex])
             ? Colors.green
             : null,
-        leading: Icon(
-          playerIndex == 0 ? Icons.admin_panel_settings : Icons.smart_toy,
-        ),
+        leading: Icon(fromPlayerKind(lobby.all[playerIndex].kind)),
         title: Text(lobby.all[playerIndex].name),
         trailing: !widget.viewModel.isHost() || playerIndex == 0
             ? null
             : IconButton(
                 onPressed: () {
                   widget.viewModel.kickPlayer(playerIndex);
-                  _myListKey.currentState!.removeItem(
-                    playerIndex,
-                    (context, animation) => SlideTransition(
-                      position: animation.drive(
-                        Tween<Offset>(
-                          begin: const Offset(1, 0),
-                          end: Offset.zero,
-                        ),
-                      ),
-                      child: FadeTransition(
-                        opacity: animation,
-                        child: _buildTile(context, lobby, playerIndex),
-                      ),
-                    ),
-                  );
                 },
                 icon: Icon(Icons.close),
               ),
@@ -125,9 +115,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
                               child: TextButton.icon(
                                 onPressed: () {
                                   widget.viewModel.addBot();
-                                  _myListKey.currentState!.insertItem(
-                                    lobby.all.length,
-                                  );
                                 },
                                 label: Icon(Icons.smart_toy),
                                 icon: Icon(Icons.add),
@@ -169,7 +156,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
                             ),
                             onPressed: () {
                               widget.viewModel.createGame();
-                              //context.go(QwixxRoutes.game);
                             },
                             child: Text('Spiel starten'),
                           ),
@@ -186,22 +172,10 @@ class _LobbyScreenState extends State<LobbyScreen> {
   }
 
   Widget _buildAnimated(BuildContext context, Lobby lobby) {
-    return AnimatedList.separated(
-      key: _myListKey,
-      initialItemCount: lobby.all.length,
-      itemBuilder: (context, index, animation) => SlideTransition(
-        position: animation.drive(
-          Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero),
-        ),
-        child: FadeTransition(
-          opacity: animation,
-          child: _buildTile(context, lobby, index),
-        ),
-      ),
-      separatorBuilder: (context, index, animation) =>
-          const SizedBox(height: 10),
-      removedSeparatorBuilder: (context, index, animation) =>
-          const SizedBox(height: 10),
+    return ListView.separated(
+      itemCount: lobby.all.length,
+      itemBuilder: (context, index) => _buildTile(context, lobby, index),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
     );
   }
 

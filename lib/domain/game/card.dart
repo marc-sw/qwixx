@@ -1,36 +1,32 @@
-import 'dart:collection';
-
-import 'package:qwixx/config/game.dart';
-import 'package:qwixx/domain/game/color.dart';
-import 'package:qwixx/domain/game/row.dart';
-import 'package:qwixx/domain/lobby/player.dart';
+part of 'game.dart';
 
 typedef Number = int;
 
 typedef MarkedNumbers = List<GameRow>;
 
+@JsonSerializable(explicitToJson: true)
 class GameCard {
-  final Player _player;
-  final List<GameRow> _rows;
-  final int _misses;
+  final Player player;
+  final List<GameRow> rows;
+  final int misses;
 
   const GameCard({
-    required this._player,
-    required this._rows,
-    required this._misses,
+    required this.player,
+    required this.rows,
+    required this.misses,
   });
+  factory GameCard.fromJson(Map<String, dynamic> json) =>
+      _$GameCardFromJson(json);
+  Map<String, dynamic> toJson() => _$GameCardToJson(this);
 
-  Player get player => _player;
-  String get name => _player.name;
-  List<GameRow> get rows => UnmodifiableListView(_rows);
-  int get misses => _misses;
-  int get missScore => _misses * GameConfig.missValue;
+  String get name => player.name;
+  int get missScore => misses * GameConfig.missValue;
   int get score =>
-      _rows.map((row) => row.score()).fold(0, (val, element) => val + element) -
+      rows.map((row) => row.score()).fold(0, (val, element) => val + element) -
       missScore;
 
   bool canMarkNumber(GameColor color, Number number) {
-    final row = _rows[color.index];
+    final row = rows[color.index];
     int index = NumberOrder.byColor(color).indexOf(number);
     if (index == GameConfig.lastRowIndex) {
       return row.markedNumbers.length >= GameConfig.completeCountRequirement &&
@@ -41,10 +37,10 @@ class GameCard {
   }
 
   GameCard markNumber(GameColor color, Number number) {
-    GameRow newRow = _rows[color.index].markNumber(number);
-    List<GameRow> newRows = List<GameRow>.from(_rows);
+    GameRow newRow = rows[color.index].markNumber(number);
+    List<GameRow> newRows = List<GameRow>.from(rows);
     newRows[color.index] = newRow;
-    return GameCard(player: player, rows: newRows, misses: _misses);
+    return GameCard(player: player, rows: newRows, misses: misses);
   }
 
   GameCard increaseMisses() {

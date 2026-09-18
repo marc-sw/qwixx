@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:qwixx/domain/game/color.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 import 'package:qwixx/ui/game/view_model/player_score.dart';
 import 'package:qwixx/ui/game/widget/control/die_widget.dart';
+import 'package:qwixx/ui/lobby/widget/lobby_screen.dart';
 
 class ResultWidget extends StatelessWidget {
   const new({
@@ -40,9 +41,20 @@ class ResultWidget extends StatelessWidget {
         ),
         child: ListTile(
           leading: Icon(index == 0 ? Icons.emoji_events : Icons.assist_walker),
-          title: Text(
-            playerScores[index].name,
-            style: TextTheme.of(context).bodyLarge,
+          title: Row(
+            spacing: 5,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(fromPlayerKind(playerScores[index].player.kind)),
+              Text(
+                playerScores[index].player.name,
+                style: TextTheme.of(context).bodyLarge!.copyWith(
+                  color: playerScores[index].player.uuid == viewModel.playerId
+                      ? Colors.green
+                      : null,
+                ),
+              ),
+            ],
           ),
           subtitle: RichText(
             text: TextSpan(
@@ -98,8 +110,6 @@ class ResultWidget extends StatelessWidget {
               trailing: IconButton(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: Icon(Icons.close),
-                //constraints: const BoxConstraints(),
-                // padding: EdgeInsets.zero,
               ),
             ),
             const Divider(thickness: 2),

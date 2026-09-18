@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qwixx/domain/game/color.dart';
+import 'package:qwixx/domain/game/game.dart';
 
 const _rollPattern = [
   [false, false, false, false, true, false, false, false, false],

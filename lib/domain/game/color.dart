@@ -1,4 +1,4 @@
-import 'package:qwixx/config/game.dart';
+part of 'game.dart';
 
 enum GameColor {
   red,

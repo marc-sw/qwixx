@@ -1,7 +1,11 @@
 part of '../gateway_command.dart';
 
+@JsonSerializable(explicitToJson: true)
 class SkipTurnCommand extends GameCommand {
-  new(super.issuerCardIndex);
+  new(super.issuerId);
+  factory SkipTurnCommand.fromJson(Map<String, dynamic> json) =>
+      _$SkipTurnCommandFromJson(json);
+  Map<String, dynamic> toJson() => _$SkipTurnCommandToJson(this);
 
   @override
   GameState execute(GameState gameState) {

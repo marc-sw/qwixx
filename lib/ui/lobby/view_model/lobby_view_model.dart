@@ -10,7 +10,7 @@ class LobbyViewModel {
   final SessionRepository _sessionRepository;
   final GatewayController _gatewayController;
 
-  new(this._sessionRepository, this._gatewayController);
+  const new(this._sessionRepository, this._gatewayController);
 
   SessionRepository get session => _sessionRepository;
   GatewayController get gateway => _gatewayController;

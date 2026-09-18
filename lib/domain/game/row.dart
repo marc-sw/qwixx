@@ -1,28 +1,28 @@
-import 'dart:collection';
+part of 'game.dart';
 
-import 'package:qwixx/config/game.dart';
-import 'package:qwixx/domain/game/card.dart';
-
+@JsonSerializable(explicitToJson: true)
 class GameRow {
-  final List<Number> _markedNumbers;
+  final List<Number> markedNumbers;
 
-  const GameRow(this._markedNumbers);
+  const GameRow(this.markedNumbers);
+  factory GameRow.fromJson(Map<String, dynamic> json) =>
+      _$GameRowFromJson(json);
+  Map<String, dynamic> toJson() => _$GameRowToJson(this);
 
   GameRow markNumber(Number number) {
-    final newMarkedNumbers = List<Number>.from(_markedNumbers)..add(number);
+    final newMarkedNumbers = List<Number>.from(markedNumbers)..add(number);
     return GameRow(newMarkedNumbers);
   }
 
-  List<Number> get markedNumbers => UnmodifiableListView(_markedNumbers);
   bool isMarked(Number number) {
-    return _markedNumbers.contains(number);
+    return markedNumbers.contains(number);
   }
 
   int score() {
-    int count = _markedNumbers.length;
+    int count = markedNumbers.length;
 
     if (count > 0) {
-      int last = _markedNumbers.last;
+      int last = markedNumbers.last;
       if (count >= GameConfig.completeCountRequirement &&
           (last == GameConfig.highestNumber ||
               last == GameConfig.lowestNumber)) {

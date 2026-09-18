@@ -1,10 +1,14 @@
 part of '../gateway_command.dart';
 
+@JsonSerializable(explicitToJson: true)
 class MarkNumberCommand extends GameCommand {
   final GameColor color;
   final Number number;
 
-  new(super.playerId, this.color, this.number);
+  new(super.issuerId, this.color, this.number);
+  factory MarkNumberCommand.fromJson(Map<String, dynamic> json) =>
+      _$MarkNumberCommandFromJson(json);
+  Map<String, dynamic> toJson() => _$MarkNumberCommandToJson(this);
 
   @override
   GameState execute(GameState gameState) {
@@ -63,10 +67,7 @@ class MarkNumberCommand extends GameCommand {
     if (!gameState.turn.canMarkWithColoredDice(cardIndex)) {
       return false;
     }
-    if (!gameState.diceRolls.coloredTargets.contains((
-      color: color,
-      number: number,
-    ))) {
+    if (!gameState.diceRolls.coloredTargets.contains(Tile(color, number))) {
       return false;
     }
     return gameState.cards[cardIndex].canMarkNumber(color, number);
@@ -80,13 +81,9 @@ class MarkNumberCommand extends GameCommand {
     if (!gameSate.turn.canMarkWithWhiteDice(cardIndex)) {
       return false;
     }
-    if (!gameSate.diceRolls.whiteTargets.contains((
-      color: color,
-      number: number,
-    ))) {
+    if (!gameSate.diceRolls.whiteTargets.contains(Tile(color, number))) {
       return false;
     }
-
     return gameSate.cards[cardIndex].canMarkNumber(
       color,
       gameSate.diceRolls.whiteSum,

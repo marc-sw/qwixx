@@ -1,3 +1,4 @@
+import 'package:qwixx/data/repository/game_discovery/game_publish_repository.dart';
 import 'package:qwixx/data/service/game_server/model.dart';
 import 'package:qwixx/domain/command/gateway_command.dart';
 import 'package:qwixx/domain/gateway/gateway_controller.dart';
@@ -5,32 +6,40 @@ import 'package:qwixx/domain/lobby/player.dart';
 
 class ServerGatewayController extends GatewayController {
   final GameServer _gameServer;
+  final GamePublishRepository _gamePublish;
 
-  new(super.user, super.lobby, this._gameServer) {
+  new(super.user, super.lobby, this._gameServer, this._gamePublish) {
     lobbyListenable.addListener(_onLobbyChanged);
     gameStateNotifierNotifier.addListener(_onGameStateNotifierChanged);
-    _gameServer.callbacks.onConntected = (user) {
-      dispatch(JoinCommand(user.uuid, user.name, PlayerKind.client));
+    _gameServer.callbacks.onConntected = (newUser) {
+      dispatch(JoinCommand(newUser.uuid, newUser.name, PlayerKind.client));
     };
-    _gameServer.callbacks.onDisconnected = (user) {
-      dispatch(LeaveCommand(user.uuid));
+    _gameServer.callbacks.onDisconnected = (newUser) {
+      dispatch(LeaveCommand(newUser.uuid));
     };
     _gameServer.callbacks.onMessage = (message) {
       dispatch(message);
     };
+    _gamePublish.publishGame(_gameServer.host, _gameServer.port, user);
   }
 
   @override
   void dispatch(GatewayMessage message) {
     String? kickUuid;
     if (message is KickCommand && message.isLegal(lobby)) {
-      kickUuid = message.targetUUID;
+      kickUuid = message.targetId;
     }
     super.dispatch(message);
-
     if (kickUuid != null) {
       _gameServer.kick(kickUuid);
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _gameServer.dispose();
+    _gamePublish.unpublishGame();
   }
 
   void _onLobbyChanged() {
@@ -41,6 +50,7 @@ class ServerGatewayController extends GatewayController {
     final notifier = gameStateNotifier;
     if (notifier != null) {
       notifier.addListener(_onGameStateChanged);
+      _onGameStateChanged();
     }
   }
 

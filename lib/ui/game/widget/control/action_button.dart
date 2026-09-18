@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qwixx/domain/game/state.dart';
-import 'package:qwixx/domain/game/turn.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 
 class ActionButton extends StatelessWidget {

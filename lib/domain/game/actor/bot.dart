@@ -1,7 +1,7 @@
 import 'package:qwixx/config/game.dart';
 import 'package:qwixx/domain/command/gateway_command.dart';
 import 'package:qwixx/domain/game/actor/actor.dart';
-import 'package:qwixx/domain/game/state.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/main.dart';
 
 class BotActor extends GameActor {

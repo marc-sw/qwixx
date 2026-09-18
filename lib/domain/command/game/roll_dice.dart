@@ -1,7 +1,11 @@
 part of '../gateway_command.dart';
 
+@JsonSerializable(explicitToJson: true)
 class RollDiceCommand extends GameCommand {
-  new(super.playerId);
+  new(super.issuerId);
+  factory RollDiceCommand.fromJson(Map<String, dynamic> json) =>
+      _$RollDiceCommandFromJson(json);
+  Map<String, dynamic> toJson() => _$RollDiceCommandToJson(this);
 
   @override
   GameState execute(GameState gameState) {

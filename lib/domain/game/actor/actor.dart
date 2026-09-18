@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:qwixx/domain/command/gateway_command.dart';
-import 'package:qwixx/domain/game/color.dart';
-import 'package:qwixx/domain/game/state.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/domain/gateway/gateway_controller.dart';
 
 List<List<MarkNumberCommand>> _initMarkNumberCommands(String playerId) {

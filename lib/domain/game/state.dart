@@ -1,27 +1,24 @@
-import 'dart:collection';
-
-import 'package:qwixx/domain/game/action.dart';
-import 'package:qwixx/domain/game/card.dart';
-import 'package:qwixx/domain/game/rolls.dart';
-import 'package:qwixx/domain/game/row.dart';
-import 'package:qwixx/domain/game/turn.dart';
-import 'package:qwixx/domain/lobby/player.dart';
+part of 'game.dart';
 
 typedef GameCards = List<GameCard>;
 typedef ActionResults = List<ActionResult>;
 
 enum GamePhase { rollDice, markNumber, gameOver }
 
+@JsonSerializable(explicitToJson: true)
 class GameState {
-  final GameCards _cards;
-  final DiceRolls _diceRolls;
-  final GameTurn _turn;
+  final GameCards cards;
+  final DiceRolls diceRolls;
+  final GameTurn turn;
 
   const GameState({
-    required this._cards,
-    required this._diceRolls,
-    required this._turn,
+    required this.cards,
+    required this.diceRolls,
+    required this.turn,
   });
+  factory GameState.fromJson(Map<String, dynamic> json) =>
+      _$GameStateFromJson(json);
+  Map<String, dynamic> toJson() => _$GameStateToJson(this);
 
   factory GameState.init(List<Player> players, int startingCardIndex) {
     final GameCards cards = players
@@ -40,33 +37,30 @@ class GameState {
     );
   }
 
-  GameCards get cards => UnmodifiableListView(_cards);
-  DiceRolls get diceRolls => _diceRolls;
-  GameTurn get turn => _turn;
   int get maxMisses =>
-      _cards.map((card) => card.misses).reduce((a, b) => a > b ? a : b);
-  bool get isGameOver => _diceRolls.coloredCount < 3 || maxMisses >= 4;
+      cards.map((card) => card.misses).reduce((a, b) => a > b ? a : b);
+  bool get isGameOver => diceRolls.coloredCount < 3 || maxMisses >= 4;
   GamePhase get phase => isGameOver
       ? GamePhase.gameOver
       : !turn.rolled
       ? GamePhase.rollDice
       : GamePhase.markNumber;
 
-  GameCards setCard(int index, GameCard card) {
-    final cards = List<GameCard>.from(_cards);
-    cards[index] = card;
-    return cards;
+  GameCards setCard(int index, GameCard newCard) {
+    final newCards = List<GameCard>.from(cards);
+    newCards[index] = newCard;
+    return newCards;
   }
 
   GameCards increaseMisses(int cardIndex) {
-    return setCard(cardIndex, _cards[cardIndex].increaseMisses());
+    return setCard(cardIndex, cards[cardIndex].increaseMisses());
   }
 
   int cardIndexOf(String playerId) {
-    return _cards.indexWhere((card) => card.player.uuid == playerId);
+    return cards.indexWhere((card) => card.player.uuid == playerId);
   }
 
-  GameCard get activeCard => _cards[turn.activeCardIndex];
+  GameCard get activeCard => cards[turn.activeCardIndex];
 
   GameState copyWith({
     GameCards? newCards,
@@ -74,9 +68,9 @@ class GameState {
     GameTurn? newTurn,
   }) {
     return GameState(
-      cards: newCards ?? _cards,
-      diceRolls: newDiceRolls ?? _diceRolls,
-      turn: newTurn ?? _turn,
+      cards: newCards ?? cards,
+      diceRolls: newDiceRolls ?? diceRolls,
+      turn: newTurn ?? turn,
     );
   }
 }

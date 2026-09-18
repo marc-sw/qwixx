@@ -13,6 +13,7 @@ class ClientGatewayController extends GatewayController {
   }
 
   void _onMessage(GatewayMessage message) {
+    //print('recevied: $message');
     super.dispatch(message);
   }
 
@@ -23,5 +24,11 @@ class ClientGatewayController extends GatewayController {
   @override
   void dispatch(GatewayMessage message) {
     _gameClient.sendMessage(message);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _gameClient.dispose();
   }
 }

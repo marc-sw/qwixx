@@ -1,4 +1,4 @@
-import 'package:qwixx/domain/game/state.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/domain/lobby/lobby.dart';
 import 'package:qwixx/main.dart';
 

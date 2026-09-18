@@ -9,7 +9,7 @@ class LobbyUsecases {
   Lobby addPlayer(Player player, Lobby lobby) {
     final players = List<Player>.from(lobby.all);
     players.add(player);
-    return lobby.copyWith(players: players);
+    return lobby.copyWith(newPlayers: players);
   }
 
   Lobby removePlayer(int index, Lobby lobby) {
@@ -18,7 +18,7 @@ class LobbyUsecases {
     }
     final players = List<Player>.from(lobby.all);
     players.removeAt(index);
-    return lobby.copyWith(players: players);
+    return lobby.copyWith(newPlayers: players);
   }
 
   Lobby addBot(Lobby lobby) {

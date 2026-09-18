@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:qwixx/config/game.dart';
-import 'package:qwixx/domain/game/color.dart';
-import 'package:qwixx/domain/game/state.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/domain/lobby/player.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 
@@ -145,8 +144,10 @@ class CardWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          viewModel.gameStateNotifier.value.cards[index].name,
-          style: TextTheme.of(context).bodyLarge,
+          player.name,
+          style: TextTheme.of(context).headlineSmall!.copyWith(
+            color: player.uuid == viewModel.playerId ? Colors.green : null,
+          ),
           textAlign: TextAlign.center,
         ),
         Expanded(

@@ -1,16 +1,20 @@
 part of '../gateway_command.dart';
 
+@JsonSerializable(explicitToJson: true)
 class JoinCommand extends LobbyCommand {
   final String name;
   final PlayerKind kind;
 
-  const new(super.issuerUUID, this.name, this.kind);
+  const new(super.issuerId, this.name, this.kind);
+  factory JoinCommand.fromJson(Map<String, dynamic> json) =>
+      _$JoinCommandFromJson(json);
+  Map<String, dynamic> toJson() => _$JoinCommandToJson(this);
 
   @override
   Lobby execute(Lobby lobby) {
     final newList = List<Player>.from(lobby.all);
     newList.add(Player(issuerId, name, kind));
-    return lobby.copyWith(players: newList);
+    return lobby.copyWith(newPlayers: newList);
   }
 
   @override
@@ -19,14 +23,18 @@ class JoinCommand extends LobbyCommand {
   }
 }
 
+@JsonSerializable(explicitToJson: true)
 class LeaveCommand extends LobbyCommand {
-  new(super.issuerUUID);
+  new(super.issuerId);
+  factory LeaveCommand.fromJson(Map<String, dynamic> json) =>
+      _$LeaveCommandFromJson(json);
+  Map<String, dynamic> toJson() => _$LeaveCommandToJson(this);
 
   @override
   Lobby execute(Lobby lobby) {
     final newList = List<Player>.from(lobby.all);
     newList.removeWhere((player) => player.uuid == issuerId);
-    return lobby.copyWith(players: newList);
+    return lobby.copyWith(newPlayers: newList);
   }
 
   @override
@@ -36,22 +44,25 @@ class LeaveCommand extends LobbyCommand {
   }
 }
 
+@JsonSerializable(explicitToJson: true)
 class KickCommand extends LobbyCommand {
-  const new(super.issuerId, this.targetUUID);
-
-  final String targetUUID;
+  final String targetId;
+  const new(super.issuerId, this.targetId);
+  factory KickCommand.fromJson(Map<String, dynamic> json) =>
+      _$KickCommandFromJson(json);
+  Map<String, dynamic> toJson() => _$KickCommandToJson(this);
 
   @override
   Lobby execute(Lobby lobby) {
     final newList = List<Player>.from(lobby.all);
-    newList.removeWhere((player) => player.uuid == targetUUID);
-    return lobby.copyWith(players: newList);
+    newList.removeWhere((player) => player.uuid == targetId);
+    return lobby.copyWith(newPlayers: newList);
   }
 
   @override
   bool isLegal(Lobby lobby) {
     return issuerId == lobby.host.uuid &&
-        targetUUID != issuerId &&
-        lobby.all.any((player) => player.uuid == targetUUID);
+        targetId != issuerId &&
+        lobby.all.any((player) => player.uuid == targetId);
   }
 }

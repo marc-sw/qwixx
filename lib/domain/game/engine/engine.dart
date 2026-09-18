@@ -1,5 +1,5 @@
 import 'package:qwixx/domain/command/gateway_command.dart';
-import 'package:qwixx/domain/game/state.dart';
+import 'package:qwixx/domain/game/game.dart';
 
 class GameEngine {
   static final GameEngine instance = GameEngine();

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:qwixx/domain/command/gateway_command.dart';
 import 'package:qwixx/domain/game/actor/bot.dart';
-import 'package:qwixx/domain/game/state.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/domain/lobby/lobby.dart';
 import 'package:qwixx/domain/lobby/player.dart';
 import 'package:qwixx/domain/user/user.dart';
@@ -41,6 +41,8 @@ class GatewayController {
         }
       case EventMessage():
         _handleEvents(message);
+      case UnknownMessage():
+        print('received unkown message');
     }
   }
 
@@ -65,4 +67,6 @@ class GatewayController {
         _lobby = lobby;
     }
   }
+
+  void dispose() {}
 }

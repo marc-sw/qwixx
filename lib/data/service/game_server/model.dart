@@ -28,6 +28,8 @@ class GameServer {
     this._callbacks,
   );
 
+  String get host => _httpServer.address.host;
+  int get port => _httpServer.port;
   ServerCallbacks get callbacks => _callbacks;
 
   void broadcast(GatewayMessage message) {

@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:qwixx/data/repository/session/session_repository.dart';
 import 'package:qwixx/domain/game/actor/actor.dart';
-import 'package:qwixx/domain/game/color.dart';
-import 'package:qwixx/domain/game/state.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/domain/gateway/gateway_controller.dart';
 import 'package:qwixx/ui/game/view_model/player_score.dart';
 
@@ -90,7 +89,7 @@ class GameViewModel extends GameActor {
     return cards
         .map(
           (card) => PlayerScore(
-            card.name,
+            card.player,
             card.score,
             card.rows[GameColor.red.index].score(),
             card.rows[GameColor.yellow.index].score(),

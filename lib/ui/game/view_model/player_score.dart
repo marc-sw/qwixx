@@ -1,5 +1,7 @@
+import 'package:qwixx/domain/lobby/player.dart';
+
 class PlayerScore {
-  final String name;
+  final Player player;
   final int score;
   final int red;
   final int yellow;
@@ -8,7 +10,7 @@ class PlayerScore {
   final int fails;
 
   const new(
-    this.name,
+    this.player,
     this.score,
     this.red,
     this.yellow,

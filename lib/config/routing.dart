@@ -4,6 +4,7 @@ import 'package:qwixx/data/repository/session/session_repository.dart';
 import 'package:qwixx/data/service/game_server/game_server_service.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 import 'package:qwixx/ui/game/widget/game_screen.dart';
+import 'package:qwixx/ui/home/view_model/game_discovery_view_model.dart';
 import 'package:qwixx/ui/home/view_model/home_view_model.dart';
 import 'package:qwixx/ui/home/view_model/settings_view_model.dart';
 import 'package:qwixx/ui/home/widget/home_screen.dart';
@@ -23,11 +24,21 @@ GoRouter get router => GoRouter(
       builder: (context, state) {
         final session = context.read<SessionRepository>();
         final serverService = context.read<GameServerService>();
-        final homeViewModel = HomeViewModel(session, serverService);
+        final homeViewModel = HomeViewModel(
+          session,
+          serverService,
+          context.read(),
+        );
         final settingsViewModel = SettingsViewModel(session);
+        final gameDiscoveryViewModel = GameDiscoveryViewModel(
+          context.read(),
+          session,
+          context.read(),
+        );
         return HomeScreen(
           viewModel: homeViewModel,
           settingsViewModel: settingsViewModel,
+          gameDiscoveryViewModel: gameDiscoveryViewModel,
         );
       },
     ),

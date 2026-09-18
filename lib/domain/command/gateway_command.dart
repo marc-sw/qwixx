@@ -1,8 +1,5 @@
 import 'package:qwixx/config/game.dart';
-import 'package:qwixx/domain/game/action.dart';
-import 'package:qwixx/domain/game/card.dart';
-import 'package:qwixx/domain/game/color.dart';
-import 'package:qwixx/domain/game/state.dart';
+import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/domain/lobby/lobby.dart';
 import 'package:qwixx/domain/lobby/player.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -13,6 +10,7 @@ part 'game/roll_dice.dart';
 part 'game/skip_turn.dart';
 part 'event/game_state.dart';
 part 'event/lobby_state.dart';
+part 'gateway_command.g.dart';
 
 sealed class GatewayMessage {
   const new();
@@ -35,5 +33,9 @@ sealed class GameCommand extends GatewayMessage {
 }
 
 sealed class EventMessage extends GatewayMessage {
+  const new();
+}
+
+class UnknownMessage extends GatewayMessage {
   const new();
 }

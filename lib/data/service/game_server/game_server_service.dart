@@ -42,8 +42,8 @@ class GameServerService {
           callbacks.onMessage(message);
         },
         onDone: () {
-          callbacks.onDisconnected(user);
           webSockets.remove(user.uuid);
+          callbacks.onDisconnected(user);
         },
         onError: print,
         cancelOnError: true,

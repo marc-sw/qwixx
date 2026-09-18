@@ -3,9 +3,10 @@ import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 import 'package:qwixx/ui/game/widget/card/card_widget.dart';
 
 class CardCarouselWidget extends StatefulWidget {
-  const new({super.key, required this.viewModel});
+  const new({super.key, required this.viewModel, this.onIndexChanged});
 
   final GameViewModel viewModel;
+  final void Function(int)? onIndexChanged;
 
   @override
   State<CardCarouselWidget> createState() => _CardCarouselState();
@@ -32,6 +33,7 @@ class _CardCarouselState extends State<CardCarouselWidget> {
   @override
   Widget build(BuildContext context) {
     return CarouselView.weighted(
+      onIndexChanged: widget.onIndexChanged,
       controller: _controller,
       itemSnapping: true,
       infinite: true,

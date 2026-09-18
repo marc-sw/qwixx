@@ -1,54 +1,67 @@
-import 'dart:collection';
-
-import 'package:qwixx/domain/game/card.dart';
-import 'package:qwixx/domain/game/color.dart';
-import 'package:qwixx/main.dart';
+part of 'game.dart';
 
 typedef WhiteRolls = List<int>;
 typedef ColoredRolls = Map<GameColor, int>;
-typedef Tile = ({GameColor color, Number number});
 
+@JsonSerializable(explicitToJson: true)
+class Tile {
+  final GameColor color;
+  final Number number;
+  const new(this.color, this.number);
+  factory Tile.fromJson(Map<String, dynamic> json) => _$TileFromJson(json);
+  Map<String, dynamic> toJson() => _$TileToJson(this);
+
+  @override
+  bool operator ==(Object other) {
+    // TODO: implement ==
+    return super == other ||
+        other is Tile && other.color == color && other.number == number;
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class DiceRolls {
-  final WhiteRolls _white;
-  final ColoredRolls _colored;
-  final List<Tile> _whiteTargets;
-  final List<Tile> _coloredTargets;
+  final WhiteRolls white;
+  final ColoredRolls colored;
+  final List<Tile> whiteTargets;
+  final List<Tile> coloredTargets;
 
   const DiceRolls(
-    this._white,
-    this._colored,
-    this._whiteTargets,
-    this._coloredTargets,
+    this.white,
+    this.colored,
+    this.whiteTargets,
+    this.coloredTargets,
   );
+  factory DiceRolls.fromJson(Map<String, dynamic> json) =>
+      _$DiceRollsFromJson(json);
+  Map<String, dynamic> toJson() => _$DiceRollsToJson(this);
 
   DiceRolls.init()
-    : _white = [5, 6],
-      _colored = LinkedHashMap.from({
+    : white = [5, 6],
+      colored = LinkedHashMap.from({
         GameColor.red: 1,
         GameColor.yellow: 2,
         GameColor.green: 3,
         GameColor.blue: 4,
       }),
-      _whiteTargets = [],
-      _coloredTargets = [];
+      whiteTargets = [],
+      coloredTargets = [];
 
-  List<int> get white => UnmodifiableListView(_white);
   List<int> get distinctWhite =>
-      _white.first == _white.last ? [_white.first] : _white;
-  Map<GameColor, int> get colored => UnmodifiableMapView(_colored);
-  int get coloredCount => _colored.length;
-  int get whiteSum => _white.fold(0, (sum, roll) => sum + roll);
+      white.first == white.last ? [white.first] : white;
+  int get coloredCount => colored.length;
+  int get whiteSum => white.fold(0, (sum, roll) => sum + roll);
 
   bool hasColor(GameColor color) {
-    return _colored.containsKey(color);
+    return colored.containsKey(color);
   }
 
   bool hasColoredSum(GameColor color, int sum) {
     if (!hasColor(color)) {
       return false;
     }
-    final roll = _colored[color]!;
-    return _white.any((whiteRoll) => whiteRoll + roll == sum);
+    final roll = colored[color]!;
+    return white.any((whiteRoll) => whiteRoll + roll == sum);
   }
 
   int _randomRoll() {
@@ -56,17 +69,17 @@ class DiceRolls {
   }
 
   DiceRolls roll() {
-    final white = WhiteRolls.generate(_white.length, (_) => _randomRoll());
-    final ColoredRolls colored = Map.from(_colored);
+    final newWhite = WhiteRolls.generate(white.length, (_) => _randomRoll());
+    final ColoredRolls newColored = Map.from(colored);
 
-    for (final color in colored.keys) {
-      colored[color] = _randomRoll();
+    for (final color in newColored.keys) {
+      newColored[color] = _randomRoll();
     }
     return DiceRolls(
-      white,
-      colored,
-      _generateWhiteTargets(white, colored),
-      _generateColoredTargets(white, colored),
+      newWhite,
+      newColored,
+      _generateWhiteTargets(newWhite, newColored),
+      _generateColoredTargets(newWhite, newColored),
     );
   }
 
@@ -74,34 +87,30 @@ class DiceRolls {
     if (!hasColor(color)) {
       return this;
     }
-    final newColored = Map<GameColor, int>.from(_colored);
+    final newColored = Map<GameColor, int>.from(colored);
     newColored.remove(color);
     return DiceRolls(
-      _white,
+      white,
       newColored,
-      _generateWhiteTargets(_white, newColored),
-      _generateColoredTargets(_white, newColored),
+      _generateWhiteTargets(white, newColored),
+      _generateColoredTargets(white, newColored),
     );
   }
 
-  List<Tile> _generateWhiteTargets(List<int> white, ColoredRolls colored) {
-    return colored.keys
-        .map((color) => (color: color, number: white.fold(0, (a, b) => a + b)))
+  List<Tile> _generateWhiteTargets(List<int> white_, ColoredRolls colored_) {
+    return colored_.keys
+        .map((color) => Tile(color, white_.fold(0, (a, b) => a + b)))
         .toList();
   }
 
-  List<Tile> _generateColoredTargets(List<int> white, ColoredRolls colored) {
-    final distinct = white.first == white.last ? [white.first] : white;
+  List<Tile> _generateColoredTargets(List<int> white_, ColoredRolls colored_) {
+    final distinct = white_.first == white_.last ? [white_.first] : white_;
     return distinct
         .expand(
-          (roll) => colored.entries.map(
-            (entry) => (color: entry.key, number: roll + entry.value),
+          (roll) => colored_.entries.map(
+            (entry) => Tile(entry.key, roll + entry.value),
           ),
         )
         .toList();
   }
-
-  List<Tile> get whiteTargets => _whiteTargets;
-
-  List<Tile> get coloredTargets => _coloredTargets;
 }
