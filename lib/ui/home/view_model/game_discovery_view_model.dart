@@ -1,3 +1,4 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/foundation.dart';
 import 'package:qwixx/data/repository/game_discovery/game_discovery_repository.dart';
 import 'package:qwixx/data/repository/session/session_repository.dart';
@@ -7,21 +8,30 @@ import 'package:qwixx/domain/lobby/lobby.dart';
 import 'package:qwixx/domain/lobby/player.dart';
 import 'package:qwixx/domain/user/user.dart';
 import 'package:qwixx/main.dart';
+import 'package:result_dart/result_dart.dart';
 
 class GameDiscoveryViewModel {
   final GameDiscoveryRepository _gameDiscovery;
   final GameClientService _gameClientService;
   final SessionRepository _session;
   final ValueNotifier<List<ServerInfo>> _serverInfosNotifier;
-  final ValueNotifier<bool> _discoveringNotifier;
   void Function(int)? afterAdd;
   void Function(int, ServerInfo)? beforeRemove;
 
-  new(this._gameDiscovery, this._session, this._gameClientService)
-    : _discoveringNotifier = ValueNotifier(false),
-      _serverInfosNotifier = ValueNotifier([]);
+  late final joinGameCommand = Command.createAsyncNoResult(_joinGame);
 
-  ValueListenable<bool> get discoveringListenable => _discoveringNotifier;
+  late final searchGamesCommand =
+      Command.createAsyncNoParamNoResultWithProgress(_searchGames);
+
+  new(this._gameDiscovery, this._session, this._gameClientService)
+    : _serverInfosNotifier = ValueNotifier([]) {
+    searchGamesCommand.isCanceled.addListener(() {
+      if (searchGamesCommand.isCanceled.value) {
+        _stopSearching();
+      }
+    });
+  }
+
   ValueListenable<List<ServerInfo>> get serverInfosListenable =>
       _serverInfosNotifier;
 
@@ -39,43 +49,12 @@ class GameDiscoveryViewModel {
     _serverInfosNotifier.value = newList;
   }
 
-  void start() async {
-    for (var i = _serverInfosNotifier.value.length - 1; i >= 0; i--) {
-      _remove(i);
-    }
-    _discoveringNotifier.value = true;
-    final stream = await _gameDiscovery.startDiscovering();
-    stream.listen(
-      (data) {
-        if (data.added) {
-          _add(data.info);
-        } else {
-          int index = _serverInfosNotifier.value.indexWhere(
-            (info) => info.host.uuid == data.info.host.uuid,
-          );
-          if (index == -1) {
-            return;
-          }
-          //animate
-          _remove(index);
-        }
-      },
-      onDone: () {
-        _discoveringNotifier.value = false;
-      },
-    );
-  }
-
-  void stop() async {
-    await _gameDiscovery.stopDiscovering();
-  }
-
-  void join(ServerInfo info) async {
+  Future<void> _joinGame(ServerInfo info) async {
     final user = User(uuid.v4(), _session.name!);
     final lobby = Lobby([
       Player(info.host.uuid, info.host.name, PlayerKind.host),
     ]);
-    final client = await _gameClientService.createGameClient(
+    final clientResult = await _gameClientService.createGameClient(
       info.serverAddress,
       info.serverPort,
       user,
@@ -83,8 +62,34 @@ class GameDiscoveryViewModel {
     _session.gatewayController = ClientGatewayController(
       user,
       lobby,
-      client,
+      clientResult.getOrThrow(),
       _session,
     );
+  }
+
+  Future<void> _searchGames(ProgressHandle handle) async {
+    for (var i = _serverInfosNotifier.value.length - 1; i >= 0; i--) {
+      _remove(i);
+    }
+    final stream = await _gameDiscovery.startDiscovering().getOrThrow();
+    await for (final data in stream) {
+      if (data.added) {
+        _add(data.info);
+      } else {
+        int index = _serverInfosNotifier.value.indexWhere(
+          (info) => info.host.uuid == data.info.host.uuid,
+        );
+        if (index == -1) {
+          return;
+        }
+        //animate
+        _remove(index);
+      }
+    }
+  }
+
+  void _stopSearching() async {
+    await _gameDiscovery.stopDiscovering();
+    print('stopped searching');
   }
 }

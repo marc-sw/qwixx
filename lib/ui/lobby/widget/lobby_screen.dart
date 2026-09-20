@@ -62,11 +62,11 @@ class _LobbyScreenState extends State<LobbyScreen> {
   Widget _buildTile(BuildContext context, Lobby lobby, int playerIndex) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade300,
+            color: Theme.of(context).shadowColor.withAlpha(50),
             blurRadius: 2,
             spreadRadius: 2,
             offset: Offset(0, 2),

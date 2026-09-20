@@ -1,3 +1,4 @@
+import 'package:command_it/command_it.dart';
 import 'package:flutter/foundation.dart';
 import 'package:qwixx/data/repository/game_discovery/game_publish_repository.dart';
 import 'package:qwixx/data/repository/session/session_repository.dart';
@@ -12,6 +13,20 @@ class HomeViewModel {
   final GameServerService _gameServerService;
   final GamePublishRepository _gamePublishRepository;
   final SessionRepository _sessionRepository;
+
+  late final createMultiplayerGame = Command.createAsyncNoParamNoResult(
+    () async {
+      final user = User(uuid.v4(), _sessionRepository.name!);
+      final lobby = LobbyUsecases.instance.createLobby(user);
+      final gameServerResult = await _gameServerService.createGameServer();
+      _sessionRepository.gatewayController = ServerGatewayController(
+        user,
+        lobby,
+        gameServerResult.getOrThrow(),
+        _gamePublishRepository,
+      );
+    },
+  );
 
   new(
     this._sessionRepository,
@@ -28,17 +43,5 @@ class HomeViewModel {
     final user = User(uuid.v4(), _sessionRepository.name!);
     final lobby = LobbyUsecases.instance.createLobby(user);
     _sessionRepository.gatewayController = GatewayController(user, lobby);
-  };
-
-  VoidCallback get onMultiLobbyTap => () async {
-    final user = User(uuid.v4(), _sessionRepository.name!);
-    final lobby = LobbyUsecases.instance.createLobby(user);
-    final gameServer = await _gameServerService.createGameServer();
-    _sessionRepository.gatewayController = ServerGatewayController(
-      user,
-      lobby,
-      gameServer,
-      _gamePublishRepository,
-    );
   };
 }

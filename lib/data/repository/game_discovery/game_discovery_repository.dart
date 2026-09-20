@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:nsd/nsd.dart';
 import 'package:qwixx/data/service/game_discovery/game_discovery_service.dart';
 import 'package:qwixx/domain/user/user.dart';
+import 'package:result_dart/result_dart.dart';
 
 const _utf8Decoder = Utf8Decoder();
 
@@ -42,20 +43,34 @@ class GameDiscoveryRepository {
 
   new(this._service);
 
-  Future<Stream<ServerInfoUpdate>> startDiscovering() async {
-    await stopDiscovering();
-    final discovery = await _service.startGameDiscovery();
-    discovery.addServiceListener(_onServiceChanged);
-    _controller = StreamController<ServerInfoUpdate>(
-      onCancel: () async => await _service.stopGameDiscovery(discovery),
-    );
-    return _controller!.stream;
+  Future<Result<Stream<ServerInfoUpdate>>> startDiscovering() async {
+    try {
+      await stopDiscovering();
+      final discoveryResult = await _service.startGameDiscovery();
+      if (discoveryResult.isError()) {
+        return discoveryResult.exceptionOrNull()!.toFailure();
+      }
+      final discovery = discoveryResult.getOrThrow();
+      discovery.addServiceListener(_onServiceChanged);
+      _controller = StreamController<ServerInfoUpdate>(
+        onCancel: () async => await _service.stopGameDiscovery(discovery),
+      );
+      return _controller!.stream.toSuccess();
+    } on Exception catch (e) {
+      return e.toFailure();
+    }
   }
 
-  Future<void> stopDiscovering() async {
-    if (_controller != null) {
+  Future<Result<Unit>> stopDiscovering() async {
+    if (_controller == null) {
+      return Success.unit();
+    }
+    try {
       await _controller!.close();
       _controller = null;
+      return Success.unit();
+    } on Exception catch (e) {
+      return e.toFailure();
     }
   }
 

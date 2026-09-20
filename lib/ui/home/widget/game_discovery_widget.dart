@@ -51,13 +51,15 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
     widget.viewModel.beforeRemove = _beforeRemove;
 
     if (widget.runOnStart) {
-      widget.viewModel.start();
+      widget.viewModel.searchGamesCommand.run();
     }
   }
 
   @override
   void dispose() {
-    widget.viewModel.stop();
+    if (widget.viewModel.searchGamesCommand.isRunning.value) {
+      widget.viewModel.searchGamesCommand.cancel();
+    }
     super.dispose();
   }
 
@@ -87,7 +89,7 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
           Expanded(child: Text('Spiel von ${info.host.name}')),
           Text('vor $formatted'),
           IconButton(
-            onPressed: () => widget.viewModel.join(info),
+            onPressed: () => widget.viewModel.joinGameCommand.run(info),
             icon: Icon(Icons.login),
           ),
         ],
@@ -98,34 +100,25 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 10,
       children: [
         ListTile(
           leading: Icon(Icons.wifi_find),
           title: Text('Suche Spiele'),
-          trailing: ValueListenableBuilder(
-            valueListenable: widget.viewModel.discoveringListenable,
-            builder: (context, discovering, child) {
-              if (discovering) {
-                return Row(
-                  spacing: 10,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed: widget.viewModel.stop,
-                      icon: Icon(Icons.stop),
-                    ),
-                    CircularProgressIndicator(),
-                  ],
-                );
-              }
-              return IconButton(
-                onPressed: () => widget.viewModel.start(),
-                icon: Icon(Icons.play_arrow),
-              );
-            },
+          trailing: IconButton(
+            onPressed: Navigator.of(context).pop,
+            icon: Icon(Icons.close),
           ),
         ),
-        const Divider(thickness: 2),
+        ValueListenableBuilder(
+          valueListenable: widget.viewModel.searchGamesCommand.results,
+          builder: (context, value, child) {
+            if (value.isRunning) {
+              return LinearProgressIndicator();
+            }
+            return const Divider(thickness: 2);
+          },
+        ),
         Expanded(
           child: ValueListenableBuilder(
             valueListenable: widget.viewModel.serverInfosListenable,

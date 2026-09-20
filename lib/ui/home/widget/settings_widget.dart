@@ -36,7 +36,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             message: 'Speichert automatisch',
             child: Icon(Icons.settings),
           ),
-          title: Text('Settings', style: TextTheme.of(context).headlineSmall),
+          title: Text('Settings'),
           trailing: IconButton(
             onPressed: () => Navigator.of(context).pop(),
             icon: Icon(Icons.close),
@@ -47,7 +47,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           child: ListView(
             padding: EdgeInsets.all(8),
             children: [
-              Text('Account', style: TextTheme.of(context).bodyLarge),
+              Container(child: Text('Account')),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -58,7 +58,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           _usernameController.text,
                         );
                       },
-                      style: TextTheme.of(context).bodyMedium,
                       controller: _usernameController,
                       decoration: InputDecoration(
                         labelText: 'Name',

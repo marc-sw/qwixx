@@ -30,14 +30,29 @@ class _HomeScreenState extends State<HomeScreen> {
     widget.viewModel.session.gatewayControllerNotifier.addListener(
       _onGatewayChanged,
     );
+    widget.viewModel.createMultiplayerGame.results.addListener(
+      _onCreateMultiplayerGameChanged,
+    );
   }
 
   @override
   void dispose() {
+    widget.viewModel.createMultiplayerGame.results.removeListener(
+      _onCreateMultiplayerGameChanged,
+    );
     widget.viewModel.session.gatewayControllerNotifier.removeListener(
       _onGatewayChanged,
     );
     super.dispose();
+  }
+
+  void _onCreateMultiplayerGameChanged() {
+    final error = widget.viewModel.createMultiplayerGame.errors.value;
+    if (error == null) {
+      return;
+    }
+
+    _showSnackbarMessage(error.error.toString());
   }
 
   void _onGatewayChanged() {
@@ -45,6 +60,12 @@ class _HomeScreenState extends State<HomeScreen> {
     if (gateway != null) {
       context.go(QwixxRoutes.lobby);
     }
+  }
+
+  void _showSnackbarMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+    );
   }
 
   Future<void> _dialogBuilder(BuildContext context, Widget child) {
@@ -92,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             spacing: 10,
             children: [
-              Text('Spielen', style: TextTheme.of(context).bodyLarge),
+              ListTile(title: Text('Spielen')),
               const Divider(thickness: 2),
               ElevatedButton(
                 onPressed: () {
@@ -155,9 +176,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Expanded(
-                child: ElevatedButton(
-                  onPressed: widget.viewModel.onMultiLobbyTap,
-                  child: Text('Mit anderen'),
+                child: ValueListenableBuilder(
+                  valueListenable:
+                      widget.viewModel.createMultiplayerGame.results,
+                  builder: (context, result, child) {
+                    if (result.isRunning) {
+                      return CircularProgressIndicator();
+                    }
+                    return ElevatedButton(
+                      onPressed: widget.viewModel.createMultiplayerGame.run,
+                      child: Text('Mit anderen'),
+                    );
+                  },
                 ),
               ),
             ],
@@ -171,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Qwixx', style: TextTheme.of(context).headlineSmall),
+        title: Text('Qwixx'),
         centerTitle: true,
         actionsPadding: EdgeInsets.only(right: 10),
         actions: [

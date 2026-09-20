@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:qwixx/config/dependencies.dart';
 import 'package:qwixx/config/routing.dart';
@@ -20,7 +21,14 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router,
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          //brightness: Brightness.dark,
+        ),
+        textTheme: GoogleFonts.averageSansTextTheme(),
+        appBarTheme: AppBarTheme(backgroundColor: Colors.blue.shade300),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }

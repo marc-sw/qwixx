@@ -35,7 +35,8 @@ class SessionRepository {
   }
 
   void _loadUserFromDisk() async {
-    _nameNotifier.value = await _localDataService.getName();
+    final result = await _localDataService.getUsername();
+    _nameNotifier.value = result.getOrNull();
   }
 
   void dispose() {
