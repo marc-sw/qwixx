@@ -71,7 +71,7 @@ class GameViewModel extends GameActor {
           return 'Markiere Nummern oder drücke fertig';
         }
         List<String> awaitingNames = [
-          for (var i = 0; i < gameState.turn.whiteDiceResults.length; i++)
+          for (var i = 0; i < gameState.turn.playerResults.length; i++)
             if (gameState.turn.isAwaitingAction(i)) gameState.cards[i].name,
         ];
         if (awaitingNames.length == 1) {

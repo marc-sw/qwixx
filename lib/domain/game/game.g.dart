@@ -61,8 +61,12 @@ Map<String, dynamic> _$DiceRollsToJson(DiceRolls instance) => <String, dynamic>{
 
 GameTurn _$GameTurnFromJson(Map<String, dynamic> json) => GameTurn(
   (json['activeCardIndex'] as num).toInt(),
-  $enumDecode(_$ActionResultEnumMap, json['coloredDiceResult']),
-  (json['whiteDiceResults'] as List<dynamic>)
+  json['activePlayerFirstMarkedTile'] == null
+      ? null
+      : Tile.fromJson(
+          json['activePlayerFirstMarkedTile'] as Map<String, dynamic>,
+        ),
+  (json['playerResults'] as List<dynamic>)
       .map((e) => $enumDecode(_$ActionResultEnumMap, e))
       .toList(),
   json['rolled'] as bool,
@@ -70,8 +74,8 @@ GameTurn _$GameTurnFromJson(Map<String, dynamic> json) => GameTurn(
 
 Map<String, dynamic> _$GameTurnToJson(GameTurn instance) => <String, dynamic>{
   'activeCardIndex': instance.activeCardIndex,
-  'coloredDiceResult': _$ActionResultEnumMap[instance.coloredDiceResult]!,
-  'whiteDiceResults': instance.whiteDiceResults
+  'activePlayerFirstMarkedTile': instance.activePlayerFirstMarkedTile?.toJson(),
+  'playerResults': instance.playerResults
       .map((e) => _$ActionResultEnumMap[e]!)
       .toList(),
   'rolled': instance.rolled,

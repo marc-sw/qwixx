@@ -13,9 +13,16 @@ class Tile {
 
   @override
   bool operator ==(Object other) {
-    // TODO: implement ==
     return super == other ||
         other is Tile && other.color == color && other.number == number;
+  }
+
+  @override
+  int get hashCode => Object.hash(color, number);
+
+  @override
+  String toString() {
+    return 'Tile($color, $number)';
   }
 }
 

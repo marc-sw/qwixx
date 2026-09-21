@@ -8,7 +8,7 @@ List<List<MarkNumberCommand>> _initMarkNumberCommands(String playerId) {
     return List.generate(11, (j) {
       final color = GameColor.byIndex(i);
       final number = NumberOrder.byColor(color).numberAt(j);
-      return MarkNumberCommand(playerId, color, number);
+      return MarkNumberCommand(playerId, Tile(color, number));
     });
   });
 }

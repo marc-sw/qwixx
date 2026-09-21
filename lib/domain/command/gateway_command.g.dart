@@ -43,23 +43,14 @@ Map<String, dynamic> _$KickCommandToJson(KickCommand instance) =>
 MarkNumberCommand _$MarkNumberCommandFromJson(Map<String, dynamic> json) =>
     MarkNumberCommand(
       json['issuerId'] as String,
-      $enumDecode(_$GameColorEnumMap, json['color']),
-      (json['number'] as num).toInt(),
+      Tile.fromJson(json['tile'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MarkNumberCommandToJson(MarkNumberCommand instance) =>
     <String, dynamic>{
       'issuerId': instance.issuerId,
-      'color': _$GameColorEnumMap[instance.color]!,
-      'number': instance.number,
+      'tile': instance.tile.toJson(),
     };
-
-const _$GameColorEnumMap = {
-  GameColor.red: 'red',
-  GameColor.yellow: 'yellow',
-  GameColor.green: 'green',
-  GameColor.blue: 'blue',
-};
 
 RollDiceCommand _$RollDiceCommandFromJson(Map<String, dynamic> json) =>
     RollDiceCommand(json['issuerId'] as String);

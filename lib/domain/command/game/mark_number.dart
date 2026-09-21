@@ -2,10 +2,9 @@ part of '../gateway_command.dart';
 
 @JsonSerializable(explicitToJson: true)
 class MarkNumberCommand extends GameCommand {
-  final GameColor color;
-  final Number number;
+  final Tile tile;
 
-  new(super.issuerId, this.color, this.number);
+  new(super.issuerId, this.tile);
   factory MarkNumberCommand.fromJson(Map<String, dynamic> json) =>
       _$MarkNumberCommandFromJson(json);
   Map<String, dynamic> toJson() => _$MarkNumberCommandToJson(this);
@@ -16,25 +15,18 @@ class MarkNumberCommand extends GameCommand {
     var turn = gameState.turn;
     var card = gameState.cards[cardIndex];
     var rolls = gameState.diceRolls;
-    card = card.markNumber(color, number);
+    card = card.markNumber(tile.color, tile.number);
 
-    int rowIndex = NumberOrder.byColor(color).indexOf(number);
+    int rowIndex = NumberOrder.byColor(tile.color).indexOf(tile.number);
 
     if (rowIndex == GameConfig.lastRowIndex) {
-      rolls = rolls.removeColoredDice(color);
+      rolls = rolls.removeColoredDice(tile.color);
     }
-
-    if (canMarkWithColoredDice(gameState)) {
-      turn = gameState.turn.setColoredActionResult(ActionResult.marked);
-    } else if (canMarkWithWhiteDice(gameState)) {
-      turn = gameState.turn.setWhiteActionResult(
-        cardIndex,
-        ActionResult.marked,
-      );
+    if (cardIndex != gameState.turn.activeCardIndex ||
+        gameState.turn.activePlayerFirstMarkedTile != null) {
+      turn = gameState.turn.setActionResult(cardIndex, ActionResult.marked);
     } else {
-      throw UnimplementedError(
-        'executing MarkNumberCommand, caught illegal state where executing is running with illegal state',
-      );
+      turn = gameState.turn.setActivePlayerFirstMark(tile);
     }
 
     if (turn.isDone()) {
@@ -53,40 +45,29 @@ class MarkNumberCommand extends GameCommand {
     if (gameState.phase != GamePhase.markNumber) {
       return false;
     }
-    if (canMarkWithColoredDice(gameState)) {
-      return true;
-    }
-    return canMarkWithWhiteDice(gameState);
+    bool canMark = canMarkTile(gameState);
+    return canMark;
   }
 
-  bool canMarkWithColoredDice(GameState gameState) {
+  bool canMarkTile(GameState gameState) {
     int cardIndex = gameState.cardIndexOf(issuerId);
-    if (cardIndex == -1) {
+    if (cardIndex == -1 ||
+        !gameState.turn.isAwaitingAction(cardIndex) ||
+        !gameState.cards[cardIndex].canMarkNumber(tile.color, tile.number)) {
       return false;
     }
-    if (!gameState.turn.canMarkWithColoredDice(cardIndex)) {
-      return false;
+    if (cardIndex != gameState.turn.activeCardIndex) {
+      return gameState.diceRolls.whiteTargets.contains(tile);
     }
-    if (!gameState.diceRolls.coloredTargets.contains(Tile(color, number))) {
-      return false;
-    }
-    return gameState.cards[cardIndex].canMarkNumber(color, number);
-  }
-
-  bool canMarkWithWhiteDice(GameState gameSate) {
-    int cardIndex = gameSate.cardIndexOf(issuerId);
-    if (cardIndex == -1) {
-      return false;
-    }
-    if (!gameSate.turn.canMarkWithWhiteDice(cardIndex)) {
-      return false;
-    }
-    if (!gameSate.diceRolls.whiteTargets.contains(Tile(color, number))) {
-      return false;
-    }
-    return gameSate.cards[cardIndex].canMarkNumber(
-      color,
-      gameSate.diceRolls.whiteSum,
-    );
+    final firstTile = gameState.turn.activePlayerFirstMarkedTile;
+    bool isWhiteAvailable =
+        firstTile == null ||
+        gameState.diceRolls.coloredTargets.contains(firstTile);
+    bool isColoredAvailable =
+        firstTile == null ||
+        gameState.diceRolls.whiteTargets.contains(firstTile);
+    return isWhiteAvailable &&
+            gameState.diceRolls.whiteTargets.contains(tile) ||
+        isColoredAvailable && gameState.diceRolls.coloredTargets.contains(tile);
   }
 }
