@@ -106,14 +106,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildActionsV2(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints.loose(Size(200, 200)),
+      constraints: BoxConstraints.loose(Size.fromWidth(180)),
       child: Card(
         child: Padding(
-          padding: const EdgeInsetsGeometry.all(8),
+          padding: const EdgeInsetsGeometry.all(12),
           child: Column(
             spacing: 10,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(title: Text('Spielen')),
+              Text('Spielen', style: TextTheme.of(context).bodyLarge),
               const Divider(thickness: 2),
               ElevatedButton(
                 onPressed: () {
@@ -133,7 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Text('Beitreten'),
               ),
-              Expanded(child: SizedBox()),
             ],
           ),
         ),
@@ -160,7 +160,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       spacing: 10,
       children: [
-        ListTile(title: Text('Spiel erstellen')),
+        ListTile(
+          title: Text('Spiel erstellen'),
+          trailing: IconButton(
+            onPressed: Navigator.of(context).pop,
+            icon: Icon(Icons.close),
+          ),
+        ),
         const Divider(thickness: 2),
         Padding(
           padding: const EdgeInsetsGeometry.symmetric(horizontal: 10),

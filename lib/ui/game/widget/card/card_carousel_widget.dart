@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
-import 'package:qwixx/ui/game/widget/card/card_widget.dart';
+import 'package:qwixx/ui/game/widget/cardV2/card_widget_v2.dart';
 
 class CardCarouselWidget extends StatefulWidget {
-  const new({super.key, required this.viewModel, this.onIndexChanged});
+  const new({super.key, required this.viewModel});
 
   final GameViewModel viewModel;
-  final void Function(int)? onIndexChanged;
 
   @override
   State<CardCarouselWidget> createState() => _CardCarouselState();
@@ -33,19 +32,15 @@ class _CardCarouselState extends State<CardCarouselWidget> {
   @override
   Widget build(BuildContext context) {
     return CarouselView.weighted(
-      onIndexChanged: widget.onIndexChanged,
       controller: _controller,
       itemSnapping: true,
       infinite: true,
       enableSplash: false,
       scrollDirection: Axis.horizontal,
       flexWeights: [1],
-      children: List.generate(
-        widget.viewModel.gameStateNotifier.value.cards.length,
-        (i) {
-          return CardWidget(index: i, viewModel: widget.viewModel);
-        },
-      ),
+      children: List.generate(widget.viewModel.cardViewModels.length, (i) {
+        return CardWidgetV2(viewModel: widget.viewModel.cardViewModels[i]);
+      }),
     );
   }
 }

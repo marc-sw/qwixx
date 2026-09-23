@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:qwixx/data/repository/session/session_repository.dart';
 import 'package:qwixx/data/service/game_server/game_server_service.dart';
+import 'package:qwixx/ui/debug/widget/debug_screen.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 import 'package:qwixx/ui/game/widget/game_screen.dart';
 import 'package:qwixx/ui/home/view_model/game_discovery_view_model.dart';
@@ -15,10 +16,17 @@ abstract final class QwixxRoutes {
   static const String home = '/';
   static const String lobby = '/lobby';
   static const String game = '/game';
+  static const String debug = '/debug';
 }
 
 GoRouter get router => GoRouter(
   routes: [
+    GoRoute(
+      path: QwixxRoutes.debug,
+      builder: (context, state) {
+        return DebugScreen();
+      },
+    ),
     GoRoute(
       path: QwixxRoutes.home,
       builder: (context, state) {

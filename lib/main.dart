@@ -22,12 +22,8 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: router,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          //brightness: Brightness.dark,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         textTheme: GoogleFonts.averageSansTextTheme(),
-        appBarTheme: AppBarTheme(backgroundColor: Colors.blue.shade300),
       ),
       debugShowCheckedModeBanner: false,
     );

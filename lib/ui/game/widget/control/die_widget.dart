@@ -12,10 +12,10 @@ const _rollPattern = [
 
 Color fromQwixx(GameColor? color) {
   return switch (color) {
-    GameColor.red => Color.fromARGB(255, 215, 63, 76),
-    GameColor.yellow => Color.fromARGB(255, 254, 228, 74),
-    GameColor.green => Color.fromARGB(255, 65, 159, 91),
-    GameColor.blue => Color.fromARGB(255, 57, 74, 139),
+    GameColor.red => Colors.red[900]!,
+    GameColor.yellow => Colors.yellow.shade700,
+    GameColor.green => Colors.green[800]!,
+    GameColor.blue => Colors.blue[900]!,
     null => Colors.white,
   };
 }

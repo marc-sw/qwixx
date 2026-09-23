@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:qwixx/ui/game/view_model/card/card_viewmodel.dart';
+import 'package:qwixx/ui/game/widget/cardV2/card_widget_v2.dart';
 
 class DebugScreen extends StatelessWidget {
   const new({super.key});
@@ -8,24 +9,7 @@ class DebugScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child:
-            Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade300,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Text("Debugging this"),
-                )
-                .animate(
-                  onPlay: (controller) => controller.repeat(reverse: true),
-                )
-                .scale(
-                  duration: const Duration(milliseconds: 1000),
-                  begin: Offset(1, 1),
-                  end: Offset(1.1, 1.1),
-                  curve: Curves.easeInOut,
-                ),
+        child: FittedBox(child: CardWidgetV2(viewModel: CardViewModel.test())),
       ),
     );
   }
