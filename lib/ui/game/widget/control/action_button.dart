@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
+import 'package:qwixx/ui/game/widget/result_widget.dart';
 
 class ActionButton extends StatelessWidget {
   const new({super.key, required this.viewModel});
@@ -26,23 +27,51 @@ class ActionButton extends StatelessWidget {
         !gameTurn.didAnyAction(
           viewModel.gameStateNotifier.value.cardIndexOf(viewModel.playerId),
         );
+    if (miss) {
+      return SizedBox.shrink();
+    }
     return Center(
       key: Key('skip'),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          shadowColor: miss ? Colors.red : Colors.green,
+          shadowColor: Colors.green,
           foregroundColor: miss ? Colors.red.shade100 : Colors.green.shade200,
         ),
         onPressed: viewModel.onSkipTap,
-        child: Text(
-          miss ? 'Fehlwurf' : 'Fertig',
-          style: TextTheme.of(context).bodyLarge,
-        ),
+        child: Text('Skip', style: TextTheme.of(context).bodyLarge),
       ),
     );
   }
 
   Widget _buildContent(BuildContext context, GameTurn turn) {
+    if (viewModel.gameOverNotifier.value) {
+      return ElevatedButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context2) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    width: 500,
+                    height: 700,
+                    child: ResultWidget(
+                      viewModel: viewModel,
+                      playerScores: viewModel.generatePlayerScores(
+                        viewModel.gameStateNotifier.value.cards,
+                      ),
+                      isGameOver: viewModel.gameStateNotifier.value.isGameOver,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: Text('Ergebniss'),
+      );
+    }
     if (viewModel.canRoll()) {
       return _buildRollDice(context);
     }

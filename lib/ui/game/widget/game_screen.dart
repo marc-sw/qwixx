@@ -6,8 +6,8 @@ import 'package:qwixx/config/routing.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 import 'package:qwixx/ui/game/widget/card/card_carousel_widget.dart';
 import 'package:qwixx/ui/game/widget/control/controls_widget.dart';
+import 'package:qwixx/ui/game/widget/heading_widget_v2.dart';
 import 'package:qwixx/ui/game/widget/result_widget.dart';
-import 'package:qwixx/ui/game/widget/heading_widget.dart';
 
 class GameScreen extends StatefulWidget {
   const new({super.key, required this.viewModel});
@@ -112,8 +112,8 @@ class _GameScreenState extends State<GameScreen> {
     return Column(
       spacing: 20,
       children: [
-        Expanded(flex: 4, child: _buildControls(context)),
-        Expanded(flex: 7, child: _buildCards(context)),
+        Expanded(child: _buildControls(context)),
+        Expanded(child: _buildCards(context)),
       ],
     );
   }
@@ -122,7 +122,9 @@ class _GameScreenState extends State<GameScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: HeadingWidget(viewModel: widget.viewModel),
+          title: HeadingWidgetV2(
+            viewModel: widget.viewModel,
+          ), //HeadingWidget(viewModel: widget.viewModel),
           centerTitle: true,
           actionsPadding: EdgeInsets.only(right: 10),
           actions: [

@@ -23,7 +23,10 @@ class CardFailWidget extends StatelessWidget {
               onPlay: (controller) => controller.repeat(reverse: true),
               delay: const Duration(milliseconds: 3000),
             )
-            .fade(duration: const Duration(milliseconds: 1250)),
+            .fade(
+              duration: const Duration(milliseconds: 750),
+              curve: Curves.easeInOutQuad,
+            ),
       ),
       FailDecoration.marked => Transform.scale(
         scale: 2,

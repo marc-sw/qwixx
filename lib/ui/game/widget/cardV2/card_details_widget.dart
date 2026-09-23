@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qwixx/ui/game/view_model/card/card_viewmodel.dart';
 import 'package:qwixx/ui/game/widget/cardV2/card_fail_widget.dart';
+import 'package:qwixx/ui/game/widget/cardV2/status_widget.dart';
 import 'package:qwixx/ui/lobby/widget/lobby_screen.dart';
 
 class CardDetailsWidget extends StatelessWidget {
@@ -15,23 +16,16 @@ class CardDetailsWidget extends StatelessWidget {
     Color? color,
   ) {
     return Expanded(
-      child: Container(
+      child: SizedBox(
         height: 50,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHigh,
-          border: Border.all(color: color ?? Colors.grey, width: 2),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Center(
-          child: ValueListenableBuilder(
-            valueListenable: listenable,
-            builder: (context, value, child) {
-              return Text(
-                value.toString(),
-                style: TextStyle(color: color, fontSize: 24),
-              );
-            },
-          ),
+        child: ValueListenableBuilder(
+          valueListenable: listenable,
+          builder: (context, value, child) {
+            return Text(
+              value.toString(),
+              style: TextTheme.of(context).headlineSmall,
+            );
+          },
         ),
       ),
     );
@@ -42,10 +36,18 @@ class CardDetailsWidget extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints.loose(Size(630, 80)),
       child: Row(
-        spacing: 20,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Padding(
+            padding: const EdgeInsetsGeometry.only(left: 20),
+            child: Transform.scale(
+              scale: 1.5,
+              child: CardStatusWidget(
+                decorationListenable: viewModel.statusListenable,
+              ),
+            ),
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -67,35 +69,34 @@ class CardDetailsWidget extends StatelessWidget {
               ),
             ],
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              spacing: 5,
-              children: [
-                Text('Score', style: TextTheme.of(context).bodyLarge),
-                Row(
-                  spacing: 5,
-                  children: [
-                    for (final entry
-                        in viewModel.cardRowViewModels.asMap().entries) ...[
-                      _buildScore(
-                        context,
-                        entry.value.scoreListenable,
-                        entry.value.color,
-                      ),
-                      if (entry.key < viewModel.cardRowViewModels.length - 1)
-                        Text('+', style: TextStyle(fontSize: 24))
-                      else
-                        Text('-', style: TextStyle(fontSize: 24)),
-                    ],
-                    _buildScore(context, viewModel.failScoreListenable, null),
-                    Text('=', style: TextStyle(fontSize: 24)),
-                    _buildScore(context, viewModel.resultScoreListenable, null),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 5,
+            children: [
+              Text('Score', style: TextTheme.of(context).bodyLarge),
+              _buildScore(context, viewModel.resultScoreListenable, null),
+              /*Row(
+                spacing: 5,
+                children: [
+                  for (final entry
+                      in viewModel.cardRowViewModels.asMap().entries) ...[
+                    _buildScore(
+                      context,
+                      entry.value.scoreListenable,
+                      entry.value.color,
+                    ),
+                    if (entry.key < viewModel.cardRowViewModels.length - 1)
+                      Text('+', style: TextStyle(fontSize: 24))
+                    else
+                      Text('-', style: TextStyle(fontSize: 24)),
                   ],
-                ),
-              ],
-            ),
+                  _buildScore(context, viewModel.failScoreListenable, null),
+                  Text('=', style: TextStyle(fontSize: 24)),
+                  _buildScore(context, viewModel.resultScoreListenable, null),
+                ],
+              ),*/
+            ],
           ),
 
           Column(

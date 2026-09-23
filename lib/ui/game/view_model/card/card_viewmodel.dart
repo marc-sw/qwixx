@@ -7,11 +7,14 @@ import 'package:qwixx/ui/game/view_model/card/card_tile_viewmodel.dart';
 
 enum FailDecoration { none, markable, marked }
 
+enum StatusDecoration { done, marking, rolling }
+
 class CardViewModel {
   final List<CardRowViewModel> cardRowViewModels;
   final List<ValueNotifier<FailDecoration>> failDecorationListenables;
   final ValueNotifier<int> failScoreListenable;
   final ValueNotifier<int> resultScoreListenable;
+  final ValueNotifier<StatusDecoration> statusListenable;
   final void Function(int) onFailTap;
   final Player player;
   final bool highlighted;
@@ -23,6 +26,7 @@ class CardViewModel {
     required this.failScoreListenable,
     required this.resultScoreListenable,
     required this.player,
+    required this.statusListenable,
     this.highlighted = false,
   });
 
@@ -62,6 +66,7 @@ class CardViewModel {
       failScoreListenable: ValueNotifier(0),
       onFailTap: onFailTip,
       player: player,
+      statusListenable: ValueNotifier(StatusDecoration.done),
       highlighted: highlighted,
     );
   }
@@ -99,6 +104,7 @@ class CardViewModel {
       ],
       resultScoreListenable: ValueNotifier(13),
       failScoreListenable: ValueNotifier(10),
+      statusListenable: ValueNotifier(StatusDecoration.done),
       onFailTap: (i) => print('tapped fail $i'),
       player: player,
     );

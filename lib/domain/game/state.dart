@@ -60,6 +60,19 @@ class GameState {
     return cards.indexWhere((card) => card.player.uuid == playerId);
   }
 
+  int cardIndexOfHighestScore() {
+    int index = -1;
+    int score = -1;
+
+    for (int i = 0; i < cards.length; i++) {
+      if (cards[i].score > score) {
+        score = cards[i].score;
+        index = i;
+      }
+    }
+    return index;
+  }
+
   GameCard get activeCard => cards[turn.activeCardIndex];
 
   GameState copyWith({
