@@ -20,6 +20,7 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   late final CarouselController _carouselController;
+  bool _resultDialogOpen = false;
 
   @override
   void initState() {
@@ -57,6 +58,10 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _showResult() {
+    if (_resultDialogOpen) {
+      return;
+    }
+    _resultDialogOpen = true;
     showDialog(
       context: context,
       builder: (context2) {
@@ -77,7 +82,7 @@ class _GameScreenState extends State<GameScreen> {
           ),
         );
       },
-    );
+    ).whenComplete(() => _resultDialogOpen = false);
   }
 
   void _onGameOverChanged() {
@@ -109,7 +114,7 @@ class _GameScreenState extends State<GameScreen> {
 
   Widget _buildControls(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: FittedBox(child: DiceWidget(viewModel: widget.viewModel)),
     ); //ControlsWidget(viewModel: widget.viewModel);
   }
@@ -118,8 +123,7 @@ class _GameScreenState extends State<GameScreen> {
     final ratio = MediaQuery.of(context).size.aspectRatio;
     if (ratio > 1.6) {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 15,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(flex: 3, child: _buildCards(context)),
           Expanded(child: _buildControls(context)),
@@ -127,7 +131,7 @@ class _GameScreenState extends State<GameScreen> {
       );
     }
     return Column(
-      spacing: 20,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(child: _buildControls(context)),
         Expanded(child: _buildCards(context)),
