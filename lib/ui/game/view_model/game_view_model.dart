@@ -24,14 +24,17 @@ class GameViewModel extends GameActor {
       _gameOverListenable = ValueNotifier(false),
       super(playerId, _gateway, _gameStateNotifier) {
     _cardViewModels = [
-      for (final card in _gameStateNotifier.value.cards)
+      for (final entry in _gameStateNotifier.value.cards.asMap().entries)
         CardViewModel.init(
-          card,
-          (tile) => onTileV2Tap(card.player.uuid, tile),
-          (index) => onFailTap(card.player.uuid, index),
-          playerId == card.player.uuid,
+          entry.value,
+          (tile) => onTileV2Tap(entry.value.player.uuid, tile),
+          (index) => onFailTap(entry.value.player.uuid, index),
+          () => onDiceRoll(entry.value.player.uuid),
+          () => onSkipTap(entry.value.player.uuid),
+          entry.value.player.uuid == playerId,
         ),
     ];
+    onGameStateChanged(_gameStateNotifier.value);
   }
 
   ValueNotifier<GameState> get gameStateNotifier => _gameStateNotifier;
@@ -52,11 +55,14 @@ class GameViewModel extends GameActor {
       } else if (!gameState.turn.rolled) {
         _cardViewModels[cardIndex].statusListenable.value =
             cardIndex == gameState.turn.activeCardIndex
-            ? StatusDecoration.rolling
+            ? StatusDecoration.rollable
             : StatusDecoration.done;
       } else if (gameState.turn.isAwaitingAction(cardIndex)) {
         _cardViewModels[cardIndex].statusListenable.value =
-            StatusDecoration.marking;
+            !gameState.turn.didAnyAction(cardIndex) &&
+                gameState.turn.activeCardIndex == cardIndex
+            ? StatusDecoration.penable
+            : StatusDecoration.skipable;
       } else {
         _cardViewModels[cardIndex].statusListenable.value =
             StatusDecoration.done;
@@ -165,21 +171,26 @@ class GameViewModel extends GameActor {
     if (playerId != cardPlayerId) {
       return;
     }
-    dispatch(markNumberCommands[column][row]);
+    throw UnimplementedError('outdated');
+    //dispatch(markNumberCommands[column][row]);
   }
 
-  void onSkipTap() {
-    dispatch(skipTurnCommand);
-  }
-
-  void onMissTap(String cardPlayerId) {
+  void onSkipTap(String cardPlayerId) {
     if (playerId == cardPlayerId) {
-      onSkipTap();
+      dispatch(skipTurnCommand);
     }
   }
 
-  void onDiceRoll() {
-    dispatch(rollDiceCommand);
+  /*void onMissTap(String cardPlayerId) {
+    if (playerId == cardPlayerId) {
+      onSkipTap();
+    }
+  }*/
+
+  void onDiceRoll(String cardPlayerId) {
+    if (cardPlayerId == playerId) {
+      dispatch(rollDiceCommand);
+    }
   }
 
   bool canRoll() {

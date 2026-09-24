@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/domain/lobby/player.dart';
-import 'package:qwixx/main.dart';
 import 'package:qwixx/ui/game/view_model/card/card_row_viewmodel.dart';
 import 'package:qwixx/ui/game/view_model/card/card_tile_viewmodel.dart';
 
 enum FailDecoration { none, markable, marked }
 
-enum StatusDecoration { done, marking, rolling }
+enum StatusDecoration { done, skipable, penable, rollable }
 
 class CardViewModel {
   final List<CardRowViewModel> cardRowViewModels;
@@ -16,8 +15,10 @@ class CardViewModel {
   final ValueNotifier<int> resultScoreListenable;
   final ValueNotifier<StatusDecoration> statusListenable;
   final void Function(int) onFailTap;
+  final void Function() onRollTap;
+  final void Function() onSkipTap;
+  final bool isActor;
   final Player player;
-  final bool highlighted;
 
   new({
     required this.cardRowViewModels,
@@ -27,14 +28,18 @@ class CardViewModel {
     required this.resultScoreListenable,
     required this.player,
     required this.statusListenable,
-    this.highlighted = false,
+    required this.onRollTap,
+    required this.onSkipTap,
+    required this.isActor,
   });
 
   factory CardViewModel.init(
     GameCard card,
     void Function(Tile) onTileTap,
     void Function(int) onFailTip,
-    bool highlighted,
+    void Function() onRollTap,
+    void Function() onSkipTap,
+    bool isActor,
   ) {
     final rows = GameColor.values
         .map(
@@ -65,48 +70,11 @@ class CardViewModel {
       resultScoreListenable: ValueNotifier(0),
       failScoreListenable: ValueNotifier(0),
       onFailTap: onFailTip,
+      onRollTap: onRollTap,
+      onSkipTap: onSkipTap,
+      isActor: isActor,
       player: player,
       statusListenable: ValueNotifier(StatusDecoration.done),
-      highlighted: highlighted,
-    );
-  }
-
-  factory CardViewModel.test() {
-    final rows = GameColor.values
-        .map(
-          (color) => CardRowViewModel(
-            cardTileViewModels: color.range
-                .map(
-                  (number) => CardTileViewModel(
-                    decorationListenable: ValueNotifier(
-                      TileDecoration.markable,
-                    ),
-                    onTap: (tile) {
-                      print('tapped $tile');
-                    },
-                    tile: Tile(color, number),
-                  ),
-                )
-                .toList(),
-            scoreListenable: ValueNotifier(2),
-            gameColor: color,
-          ),
-        )
-        .toList();
-    final player = Player(uuid.v4(), 'Marc', PlayerKind.client);
-    return CardViewModel(
-      cardRowViewModels: rows,
-      failDecorationListenables: [
-        ValueNotifier(FailDecoration.marked),
-        ValueNotifier(FailDecoration.marked),
-        ValueNotifier(FailDecoration.markable),
-        ValueNotifier(FailDecoration.none),
-      ],
-      resultScoreListenable: ValueNotifier(13),
-      failScoreListenable: ValueNotifier(10),
-      statusListenable: ValueNotifier(StatusDecoration.done),
-      onFailTap: (i) => print('tapped fail $i'),
-      player: player,
     );
   }
 }

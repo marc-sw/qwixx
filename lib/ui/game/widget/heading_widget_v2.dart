@@ -3,9 +3,10 @@ import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 import 'package:qwixx/ui/game/widget/cardV2/status_widget.dart';
 
 class HeadingWidgetV2 extends StatelessWidget {
-  const new({super.key, required this.viewModel});
+  const new({super.key, required this.viewModel, required this.onTap});
 
   final GameViewModel viewModel;
+  final void Function(int) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +22,15 @@ class HeadingWidgetV2 extends StatelessWidget {
         spacing: 15,
         mainAxisSize: MainAxisSize.min,
         children: [
-          for (final card in viewModel.cardViewModels)
-            Transform.scale(
-              scale: 2,
-              child: CardStatusWidget(
-                decorationListenable: card.statusListenable,
+          for (final entry in viewModel.cardViewModels.asMap().entries)
+            GestureDetector(
+              onTap: () => onTap(entry.key),
+              child: Transform.scale(
+                scale: 2,
+                child: CardStatusWidget(
+                  decorationListenable: entry.value.statusListenable,
+                  isActor: viewModel.playerId == entry.value.player.uuid,
+                ),
               ),
             ),
         ],

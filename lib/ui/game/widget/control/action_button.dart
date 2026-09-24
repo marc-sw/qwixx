@@ -13,7 +13,7 @@ class ActionButton extends StatelessWidget {
     return Center(
       key: Key('roll'),
       child: ElevatedButton(
-        onPressed: viewModel.onDiceRoll,
+        onPressed: () => viewModel.onDiceRoll(viewModel.playerId),
         child: Text('Würfeln', style: TextTheme.of(context).bodyLarge),
       ),
     );
@@ -37,7 +37,7 @@ class ActionButton extends StatelessWidget {
           shadowColor: Colors.green,
           foregroundColor: miss ? Colors.red.shade100 : Colors.green.shade200,
         ),
-        onPressed: viewModel.onSkipTap,
+        onPressed: () => viewModel.onSkipTap(viewModel.playerId),
         child: Text('Skip', style: TextTheme.of(context).bodyLarge),
       ),
     );

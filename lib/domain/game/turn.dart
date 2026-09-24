@@ -91,16 +91,6 @@ class GameTurn {
     );
   }
 
-  /*GameTurn setColoredActionResult(ActionResult result) {
-    return GameTurn(activeCardIndex, result, whiteDiceResults, rolled);
-  }
-
-  GameTurn setWhiteActionResult(int cardIndex, ActionResult result) {
-    final newResults = List<ActionResult>.from(whiteDiceResults);
-    newResults[cardIndex] = result;
-    return GameTurn(activeCardIndex, coloredDiceResult, newResults, rolled);
-  }*/
-
   GameTurn setRolled(bool rolled) {
     return GameTurn(
       activeCardIndex,

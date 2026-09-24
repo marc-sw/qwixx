@@ -13,6 +13,7 @@ class CardWidgetV2 extends StatelessWidget {
     return FittedBox(
       child: Card(
         elevation: 5,
+        shadowColor: Colors.green.withAlpha(127),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

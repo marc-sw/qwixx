@@ -45,7 +45,8 @@ class CardWidget extends StatelessWidget {
               if (value < 4)
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => viewModel.onMissTap(player.uuid),
+                    onTap: () =>
+                        throw UnimplementedError('not implemented, outdated'),
                   ),
                 ),
             ],

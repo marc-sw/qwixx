@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:qwixx/config/routing.dart';
 import 'package:qwixx/ui/game/view_model/game_view_model.dart';
 import 'package:qwixx/ui/game/widget/card/card_carousel_widget.dart';
-import 'package:qwixx/ui/game/widget/control/controls_widget.dart';
+import 'package:qwixx/ui/game/widget/control/dice_widget.dart';
 import 'package:qwixx/ui/game/widget/heading_widget_v2.dart';
 import 'package:qwixx/ui/game/widget/result_widget.dart';
 
@@ -19,10 +19,20 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  late final CarouselController _carouselController;
+
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+    final index = widget.viewModel.gameStateNotifier.value.cardIndexOf(
+      widget.viewModel.playerId,
+    );
+    _carouselController = CarouselController(
+      initialItem: index == -1 ? 0 : index,
+    );
+
     widget.viewModel.gateway.gameStateNotifierNotifier.addListener(
       _onGameStateNotifierChanged,
     );
@@ -35,6 +45,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    _carouselController.dispose();
     widget.viewModel.gateway.gameStateNotifierNotifier.removeListener(
       _onGameStateNotifierChanged,
     );
@@ -90,11 +101,17 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Widget _buildCards(BuildContext context) {
-    return CardCarouselWidget(viewModel: widget.viewModel);
+    return CardCarouselWidget(
+      viewModel: widget.viewModel,
+      controller: _carouselController,
+    );
   }
 
   Widget _buildControls(BuildContext context) {
-    return ControlsWidget(viewModel: widget.viewModel);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: FittedBox(child: DiceWidget(viewModel: widget.viewModel)),
+    ); //ControlsWidget(viewModel: widget.viewModel);
   }
 
   Widget _buildContent(BuildContext context) {
@@ -124,6 +141,7 @@ class _GameScreenState extends State<GameScreen> {
         appBar: AppBar(
           title: HeadingWidgetV2(
             viewModel: widget.viewModel,
+            onTap: (i) => _carouselController.animateToItem(i),
           ), //HeadingWidget(viewModel: widget.viewModel),
           centerTitle: true,
           actionsPadding: EdgeInsets.only(right: 10),

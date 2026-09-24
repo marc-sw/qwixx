@@ -14,3 +14,9 @@ part 'row.dart';
 part 'game.g.dart';
 
 enum ActionResult { awaiting, skipped, marked }
+
+final cardTiles = [
+  for (final color in GameColor.values) ...[
+    for (final number in color.range) Tile(color, number),
+  ],
+];

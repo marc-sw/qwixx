@@ -1,11 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:qwixx/ui/game/view_model/card/card_viewmodel.dart';
 
 class CardStatusWidget extends StatelessWidget {
-  const new({super.key, required this.decorationListenable});
+  const new({
+    super.key,
+    required this.decorationListenable,
+    this.scale = 1,
+    bool isActor = false,
+  }) : color = isActor ? Colors.green : null;
 
+  final double scale;
+  final Color? color;
   final ValueListenable<StatusDecoration> decorationListenable;
 
   @override
@@ -14,27 +20,19 @@ class CardStatusWidget extends StatelessWidget {
       valueListenable: decorationListenable,
       builder: (context, value, child) {
         return switch (value) {
-          StatusDecoration.done => Icon(Icons.done),
-          StatusDecoration.marking =>
-            Icon(Icons.hourglass_empty)
-                .animate(
-                  onPlay: (controller) => controller.repeat(reverse: true),
-                )
-                .fade(
-                  duration: const Duration(milliseconds: 750),
-                  begin: 0.1,
-                  curve: Curves.easeInOutQuad,
-                ),
-          StatusDecoration.rolling =>
-            Icon(Icons.casino)
-                .animate(
-                  onPlay: (controller) => controller.repeat(reverse: true),
-                )
-                .fade(
-                  duration: const Duration(milliseconds: 750),
-                  begin: 0.1,
-                  curve: Curves.easeInOutQuad,
-                ),
+          StatusDecoration.done => Transform.scale(
+            scale: scale,
+            child: Icon(Icons.done, color: color),
+          ),
+          StatusDecoration.skipable ||
+          StatusDecoration.penable => Transform.scale(
+            scale: scale,
+            child: Icon(Icons.question_mark, color: color),
+          ),
+          StatusDecoration.rollable => Transform.scale(
+            scale: scale,
+            child: Icon(Icons.casino, color: color),
+          ),
         };
       },
     );

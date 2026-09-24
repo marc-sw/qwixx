@@ -5,6 +5,7 @@ import 'package:qwixx/domain/game/game.dart';
 import 'package:qwixx/main.dart';
 
 class BotActor extends GameActor {
+  final ActionSelector _actionSelector = RandomActionSelector();
   new(super.playerId, super.gateway, super.gameStateNotifier);
 
   @override
@@ -13,15 +14,21 @@ class BotActor extends GameActor {
       _dispatchDelayed(rollDiceCommand);
       return;
     }
-    for (final list in markNumberCommands) {
-      for (final cmd in list) {
-        if (cmd.isLegal(gameState)) {
-          _dispatchDelayed(cmd);
-          return;
-        }
-      }
+    int cardIndex = gameState.cardIndexOf(playerId);
+    if (cardIndex == -1 || !gameState.turn.isAwaitingAction(cardIndex)) {
+      return;
     }
-    if (skipTurnCommand.isLegal(gameState)) {
+
+    final tile = _actionSelector.selectTile(
+      cardTiles
+          .where((tile) => MarkNumberCommand(playerId, tile).isLegal(gameState))
+          .toList(),
+      gameState.turn.isFailThrow(cardIndex) ? -5 : 0,
+    );
+
+    if (tile != null) {
+      _dispatchDelayed(MarkNumberCommand(playerId, tile));
+    } else {
       _dispatchDelayed(skipTurnCommand);
     }
   }
@@ -35,5 +42,16 @@ class BotActor extends GameActor {
       Duration(milliseconds: delayMillis),
       () => dispatch(command),
     );
+  }
+}
+
+abstract interface class ActionSelector {
+  Tile? selectTile(List<Tile> legalTiles, int penalty);
+}
+
+class RandomActionSelector implements ActionSelector {
+  @override
+  Tile? selectTile(List<Tile> legalTiles, int penalty) {
+    return legalTiles.firstOrNull;
   }
 }

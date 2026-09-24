@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qwixx/ui/game/view_model/card/card_viewmodel.dart';
+import 'package:qwixx/ui/game/widget/cardV2/card_action_widget.dart';
 import 'package:qwixx/ui/game/widget/cardV2/card_fail_widget.dart';
 import 'package:qwixx/ui/game/widget/cardV2/status_widget.dart';
 import 'package:qwixx/ui/lobby/widget/lobby_screen.dart';
@@ -41,11 +42,15 @@ class CardDetailsWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsetsGeometry.only(left: 20),
-            child: Transform.scale(
-              scale: 1.5,
-              child: CardStatusWidget(
-                decorationListenable: viewModel.statusListenable,
-              ),
+            child: SizedBox(
+              width: 50,
+              height: 50,
+              child: viewModel.isActor
+                  ? CardActionWidget(viewModel: viewModel)
+                  : CardStatusWidget(
+                      decorationListenable: viewModel.statusListenable,
+                      scale: 2,
+                    ),
             ),
           ),
           Column(
@@ -61,7 +66,7 @@ class CardDetailsWidget extends StatelessWidget {
                     Text(
                       viewModel.player.name,
                       style: TextTheme.of(context).bodyLarge!.copyWith(
-                        color: viewModel.highlighted ? Colors.green : null,
+                        color: viewModel.isActor ? Colors.green : null,
                       ),
                     ),
                   ],
@@ -76,26 +81,6 @@ class CardDetailsWidget extends StatelessWidget {
             children: [
               Text('Score', style: TextTheme.of(context).bodyLarge),
               _buildScore(context, viewModel.resultScoreListenable, null),
-              /*Row(
-                spacing: 5,
-                children: [
-                  for (final entry
-                      in viewModel.cardRowViewModels.asMap().entries) ...[
-                    _buildScore(
-                      context,
-                      entry.value.scoreListenable,
-                      entry.value.color,
-                    ),
-                    if (entry.key < viewModel.cardRowViewModels.length - 1)
-                      Text('+', style: TextStyle(fontSize: 24))
-                    else
-                      Text('-', style: TextStyle(fontSize: 24)),
-                  ],
-                  _buildScore(context, viewModel.failScoreListenable, null),
-                  Text('=', style: TextStyle(fontSize: 24)),
-                  _buildScore(context, viewModel.resultScoreListenable, null),
-                ],
-              ),*/
             ],
           ),
 
