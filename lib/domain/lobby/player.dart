@@ -10,5 +10,6 @@ class Player extends User {
   final PlayerKind kind;
   new(super.uuid, super.name, this.kind);
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$PlayerToJson(this);
 }

@@ -90,6 +90,5 @@ class GameDiscoveryViewModel {
 
   void _stopSearching() async {
     await _gameDiscovery.stopDiscovering();
-    print('stopped searching');
   }
 }

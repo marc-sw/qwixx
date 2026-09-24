@@ -57,6 +57,14 @@ enum NumberOrder {
       NumberOrder.descending => GameConfig.highestNumber - number,
     };
   }
+
+  int normalized(int number) {
+    if (this == NumberOrder.ascending) {
+      return number;
+    }
+    int diff = number - 7;
+    return 7 - diff;
+  }
 }
 
 Iterable<int> _range(int start, int end) sync* {

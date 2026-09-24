@@ -47,7 +47,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           child: ListView(
             padding: EdgeInsets.all(8),
             children: [
-              Container(child: Text('Account')),
+              Text('Account'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(

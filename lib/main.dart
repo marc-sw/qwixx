@@ -29,12 +29,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-
-/*
-
-  TODO: Wrap data methods in data layer with https://pub.dev/packages/result_dart
-        for better error handling
-        Wrap view model methods with https://pub.dev/packages/command_it
-        for better state handling
-
-*/

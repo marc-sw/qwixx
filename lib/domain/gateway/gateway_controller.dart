@@ -42,7 +42,7 @@ class GatewayController {
       case EventMessage():
         _handleEvents(message);
       case UnknownMessage():
-        print('received unkown message');
+        throw AssertionError('unknown message');
     }
   }
 
