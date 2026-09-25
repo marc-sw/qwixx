@@ -36,7 +36,7 @@ class DieWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(3),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade400,
+            color: Colors.black,
             offset: Offset(0, 2),
             blurRadius: 2,
             spreadRadius: 2,

@@ -11,6 +11,7 @@ class CardCarouselWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CarouselView.weighted(
+      backgroundColor: Colors.transparent,
       controller: controller,
       itemSnapping: true,
       infinite: true,

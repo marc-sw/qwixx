@@ -16,10 +16,15 @@ class HeadingWidgetV2 extends StatelessWidget {
         if (!value) {
           return child!;
         }
-        return Text('Spiel vorbei', style: TextTheme.of(context).headlineSmall);
+        return Text(
+          'Spiel vorbei',
+          style: TextTheme.of(context).headlineSmall!
+              .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+        );
       },
       child: Row(
         spacing: 15,
+        mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
           for (final entry in viewModel.cardViewModels.asMap().entries)

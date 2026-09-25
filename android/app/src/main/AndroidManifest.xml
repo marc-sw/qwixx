@@ -4,7 +4,7 @@
     <application
         android:label="qwixx"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/qwixx_splash_art">
 
         <activity
             android:name=".MainActivity"

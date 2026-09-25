@@ -8,7 +8,7 @@ class CardStatusWidget extends StatelessWidget {
     required this.decorationListenable,
     this.scale = 1,
     bool isActor = false,
-  }) : color = isActor ? Colors.green : null;
+  }) : color = isActor ? Colors.green : Colors.white;
 
   final double scale;
   final Color? color;

@@ -95,6 +95,7 @@ class ResultWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -102,14 +103,22 @@ class ResultWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.leaderboard),
+              leading: Icon(
+                Icons.leaderboard,
+                color: Theme.of(context).colorScheme.onInverseSurface,
+              ),
               title: Text(
                 'Leaderboard',
-                style: TextTheme.of(context).headlineSmall,
+                style: TextTheme.of(context).headlineSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
               ),
               trailing: IconButton(
                 onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(Icons.close),
+                icon: Icon(
+                  Icons.close,
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
               ),
             ),
             const Divider(thickness: 2),
@@ -121,6 +130,7 @@ class ResultWidget extends StatelessWidget {
               children: [
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.white,
                     foregroundColor: Theme.of(context).colorScheme.error,
                     side: BorderSide(
                       color: Theme.of(context).colorScheme.error,
@@ -134,10 +144,6 @@ class ResultWidget extends StatelessWidget {
 
                 if (isGameOver)
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
                     onPressed: () {
                       viewModel.deleteGame();
                     },

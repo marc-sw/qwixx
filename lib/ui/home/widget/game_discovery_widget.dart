@@ -86,11 +86,26 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
       child: Row(
         spacing: 10,
         children: [
-          Expanded(child: Text('Spiel von ${info.host.name}')),
-          Text('vor $formatted'),
+          Expanded(
+            child: Text(
+              'Spiel von ${info.host.name}',
+              style: TextTheme.of(context).bodyLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onInverseSurface,
+              ),
+            ),
+          ),
+          Text(
+            'vor $formatted',
+            style: TextTheme.of(context).bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
+          ),
           IconButton(
             onPressed: () => widget.viewModel.joinGameCommand.run(info),
-            icon: Icon(Icons.login),
+            icon: Icon(
+              Icons.login,
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
           ),
         ],
       ),
@@ -103,11 +118,22 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
       spacing: 10,
       children: [
         ListTile(
-          leading: Icon(Icons.wifi_find),
-          title: Text('Suche Spiele'),
+          leading: Icon(
+            Icons.wifi_find,
+            color: Theme.of(context).colorScheme.onInverseSurface,
+          ),
+          title: Text(
+            'Suche Spiele',
+            style: TextTheme.of(context).bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
+          ),
           trailing: IconButton(
             onPressed: Navigator.of(context).pop,
-            icon: Icon(Icons.close),
+            icon: Icon(
+              Icons.close,
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
           ),
         ),
         ValueListenableBuilder(

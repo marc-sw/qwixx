@@ -24,7 +24,9 @@ class CardDetailsWidget extends StatelessWidget {
           builder: (context, value, child) {
             return Text(
               value.toString(),
-              style: TextTheme.of(context).headlineSmall,
+              style: TextTheme.of(context).headlineSmall!.copyWith(
+                color: Theme.of(context).colorScheme.onInverseSurface,
+              ),
             );
           },
         ),
@@ -56,17 +58,27 @@ class CardDetailsWidget extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Spieler', style: TextTheme.of(context).bodyLarge),
+              Text(
+                'Spieler',
+                style: TextTheme.of(context).bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
+              ),
               SizedBox(
                 height: 50,
                 child: Row(
                   spacing: 3,
                   children: [
-                    Icon(fromPlayerKind(viewModel.player.kind)),
+                    Icon(
+                      fromPlayerKind(viewModel.player.kind),
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                    ),
                     Text(
                       viewModel.player.name,
                       style: TextTheme.of(context).bodyLarge!.copyWith(
-                        color: viewModel.isActor ? Colors.green : null,
+                        color: viewModel.isActor
+                            ? Colors.green
+                            : Theme.of(context).colorScheme.onInverseSurface,
                       ),
                     ),
                   ],
@@ -79,7 +91,12 @@ class CardDetailsWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: 5,
             children: [
-              Text('Score', style: TextTheme.of(context).bodyLarge),
+              Text(
+                'Score',
+                style: TextTheme.of(context).bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
+              ),
               _buildScore(context, viewModel.resultScoreListenable, null),
             ],
           ),
@@ -88,7 +105,12 @@ class CardDetailsWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 5,
             children: [
-              Text('Fehlwürfe', style: TextTheme.of(context).bodyLarge),
+              Text(
+                'Fehlwürfe',
+                style: TextTheme.of(context).bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
+              ),
               Row(
                 spacing: 3,
                 children: [

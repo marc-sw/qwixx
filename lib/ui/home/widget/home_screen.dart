@@ -73,12 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) {
         return Dialog(
+          backgroundColor: Colors.transparent,
           insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusGeometry.circular(12),
           ),
-          constraints: BoxConstraints.loose(Size(450, 700)),
-          child: SizedBox.expand(
+          constraints: BoxConstraints.loose(Size(400, 600)),
+          child: Card(
+            color: Colors.transparent,
             child: Padding(padding: const EdgeInsets.all(8.0), child: child),
           ),
         );
@@ -87,34 +89,33 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSetup(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 20,
-      children: [
-        Text('Um spielen zu können brauchst du einene Namen'),
-        ElevatedButton.icon(
-          icon: Icon(Icons.settings),
-          label: Text('Einstellungen'),
-          onPressed: () => _dialogBuilder(
-            context,
-            SettingsWidget(viewModel: widget.settingsViewModel),
-          ),
-        ),
-      ],
+    return ElevatedButton.icon(
+      icon: Icon(Icons.settings),
+      label: Text('Name festlegen'),
+      onPressed: () => _dialogBuilder(
+        context,
+        SettingsWidget(viewModel: widget.settingsViewModel),
+      ),
     );
   }
 
   Widget _buildActionsV2(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints.loose(Size.fromWidth(180)),
+      constraints: BoxConstraints.loose(Size.fromWidth(150)),
       child: Card(
+        color: Colors.transparent,
         child: Padding(
           padding: const EdgeInsetsGeometry.all(12),
           child: Column(
-            spacing: 10,
+            spacing: 5,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Spielen', style: TextTheme.of(context).bodyLarge),
+              Text(
+                'Spielen',
+                style: TextTheme.of(context).bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
+              ),
               const Divider(thickness: 2),
               ElevatedButton(
                 onPressed: () {
@@ -161,40 +162,49 @@ class _HomeScreenState extends State<HomeScreen> {
       spacing: 10,
       children: [
         ListTile(
-          title: Text('Spiel erstellen'),
+          title: Text(
+            'Spiel erstellen',
+            style: TextTheme.of(context).bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
+          ),
           trailing: IconButton(
             onPressed: Navigator.of(context).pop,
-            icon: Icon(Icons.close),
+            icon: Icon(
+              Icons.close,
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
           ),
         ),
         const Divider(thickness: 2),
         Padding(
           padding: const EdgeInsetsGeometry.symmetric(horizontal: 10),
-          child: Row(
+          child: Column(
             spacing: 10,
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
+              SizedBox(
+                width: 125,
                 child: ElevatedButton(
                   onPressed: widget.viewModel.onSoloLobbyTap,
                   child: Text('Alleine'),
                 ),
               ),
-              Expanded(
-                child: ValueListenableBuilder(
-                  valueListenable:
-                      widget.viewModel.createMultiplayerGame.results,
-                  builder: (context, result, child) {
-                    if (result.isRunning) {
-                      return CircularProgressIndicator();
-                    }
-                    return ElevatedButton(
+              ValueListenableBuilder(
+                valueListenable: widget.viewModel.createMultiplayerGame.results,
+                builder: (context, result, child) {
+                  if (result.isRunning) {
+                    return CircularProgressIndicator();
+                  }
+                  return SizedBox(
+                    width: 125,
+                    child: ElevatedButton(
                       onPressed: widget.viewModel.createMultiplayerGame.run,
                       child: Text('Mit anderen'),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -206,33 +216,58 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Qwixx'),
-        centerTitle: true,
-        actionsPadding: EdgeInsets.only(right: 10),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 6),
-            child: ValueListenableBuilder(
-              valueListenable: widget.viewModel.nameNotifier,
-              builder: (context, name, child) {
-                if (name == null) {
-                  return SizedBox.shrink();
-                }
-                return Text(name);
-              },
-            ),
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/image/qwixx_background.png'),
+            fit: BoxFit.cover,
           ),
-          IconButton(
-            onPressed: () => _dialogBuilder(
-              context,
-              SettingsWidget(viewModel: widget.settingsViewModel),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsetsGeometry.only(right: 5),
+              child: Row(
+                spacing: 5,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: widget.viewModel.nameNotifier,
+                    builder: (context, name, child) {
+                      if (name == null) {
+                        return SizedBox.shrink();
+                      }
+                      return Text(
+                        name,
+                        style: TextTheme.of(context).bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.onInverseSurface,
+                        ),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    onPressed: () => _dialogBuilder(
+                      context,
+                      SettingsWidget(viewModel: widget.settingsViewModel),
+                    ),
+                    icon: Icon(
+                      Icons.settings,
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            icon: Icon(Icons.settings),
-          ),
-        ],
+            Expanded(child: Center(child: _buildContent(context))),
+          ],
+        ),
       ),
-      body: Center(child: _buildContent(context)),
     );
   }
 }
+
+/*Padding(
+            padding: EdgeInsets.only(right: 6),
+            child: ,
+          ),
+          ,*/

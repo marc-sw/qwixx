@@ -96,6 +96,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
       constraints: BoxConstraints.loose(Size(500, 700)),
       child: SizedBox.expand(
         child: Card(
+          color: Colors.transparent,
           margin: EdgeInsets.all(16),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -105,9 +106,15 @@ class _LobbyScreenState extends State<LobbyScreen> {
                 return Column(
                   children: [
                     ListTile(
-                      leading: Icon(Icons.group),
+                      leading: Icon(
+                        Icons.group,
+                        color: Theme.of(context).colorScheme.onInverseSurface,
+                      ),
                       title: Text(
                         'Spiel von ${lobby.host.name} (${lobby.all.length})',
+                        style: TextTheme.of(context).bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.onInverseSurface,
+                        ),
                       ),
                       trailing: widget.viewModel.isHost()
                           ? Tooltip(
@@ -116,8 +123,18 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 onPressed: () {
                                   widget.viewModel.addBot();
                                 },
-                                label: Icon(Icons.smart_toy),
-                                icon: Icon(Icons.add),
+                                label: Icon(
+                                  Icons.smart_toy,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onInverseSurface,
+                                ),
+                                icon: Icon(
+                                  Icons.add,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onInverseSurface,
+                                ),
                               ),
                             )
                           : null,
@@ -131,6 +148,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                       children: [
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
                             foregroundColor: Theme.of(context)
                                 .colorScheme
                                 .error,
@@ -146,14 +164,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
                         if (lobby.all.length > 1 && widget.viewModel.isHost())
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .primary,
-                              foregroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimary,
-                            ),
                             onPressed: () {
                               widget.viewModel.createGame();
                             },
@@ -181,6 +191,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: _buildLobbyFound(context)));
+    return Scaffold(
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/image/qwixx_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(child: _buildLobbyFound(context)),
+      ),
+    );
   }
 }

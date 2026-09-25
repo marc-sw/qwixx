@@ -12,8 +12,7 @@ class CardWidgetV2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       child: Card(
-        elevation: 5,
-        shadowColor: Colors.green.withAlpha(127),
+        color: Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

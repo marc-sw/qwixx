@@ -69,7 +69,7 @@ class _GameScreenState extends State<GameScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
-              width: 500,
+              width: 400,
               height: 700,
               child: ResultWidget(
                 viewModel: widget.viewModel,
@@ -142,20 +142,41 @@ class _GameScreenState extends State<GameScreen> {
   Widget _buildGameFound(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: HeadingWidgetV2(
-            viewModel: widget.viewModel,
-            onTap: (i) => _carouselController.animateToItem(i),
-          ), //HeadingWidget(viewModel: widget.viewModel),
-          centerTitle: true,
-          actionsPadding: EdgeInsets.only(right: 10),
-          actions: [
-            IconButton(onPressed: _showResult, icon: Icon(Icons.leaderboard)),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _buildContent(context),
+        body: DecoratedBox(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/image/qwixx_background.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: HeadingWidgetV2(
+                      viewModel: widget.viewModel,
+                      onTap: (i) => _carouselController.animateToItem(i),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _showResult,
+                    icon: Icon(
+                      Icons.leaderboard,
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _buildContent(context),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

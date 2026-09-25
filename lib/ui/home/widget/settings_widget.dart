@@ -34,12 +34,23 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         ListTile(
           leading: Tooltip(
             message: 'Speichert automatisch',
-            child: Icon(Icons.settings),
+            child: Icon(
+              Icons.settings,
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
           ),
-          title: Text('Settings'),
+          title: Text(
+            'Settings',
+            style: TextTheme.of(context).bodyLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
+          ),
           trailing: IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.close),
+            icon: Icon(
+              Icons.close,
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
           ),
         ),
         const Divider(),
@@ -47,7 +58,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           child: ListView(
             padding: EdgeInsets.all(8),
             children: [
-              Text('Account'),
+              Text(
+                'Account',
+                style: TextTheme.of(context).bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -60,7 +76,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       },
                       controller: _usernameController,
                       decoration: InputDecoration(
-                        labelText: 'Name',
                         prefixIcon: const Icon(Icons.person_outline),
                         filled: true,
                         fillColor: Theme.of(context)
@@ -78,6 +93,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           ),
                         ),
                       ),
+
                       onSubmitted: widget.viewModel.onUsernameSubmit,
                     ),
                   ],
