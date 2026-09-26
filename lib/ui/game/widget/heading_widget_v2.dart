@@ -29,7 +29,7 @@ class HeadingWidgetV2 extends StatelessWidget {
             color: Colors.black.withAlpha(75),
             borderRadius: BorderRadius.circular(6),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 3),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.hardEdge,

@@ -219,51 +219,59 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: DecoratedBox(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/image/qwixx_background.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsetsGeometry.only(right: 5),
-              child: Row(
-                spacing: 5,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ValueListenableBuilder(
-                    valueListenable: widget.viewModel.nameNotifier,
-                    builder: (context, name, child) {
-                      if (name == null) {
-                        return SizedBox.shrink();
-                      }
-                      return Text(
-                        name,
-                        style: TextTheme.of(context).bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.onInverseSurface,
-                        ),
-                      );
-                    },
-                  ),
-                  IconButton(
-                    onPressed: () => _dialogBuilder(
-                      context,
-                      SettingsWidget(viewModel: widget.settingsViewModel),
-                    ),
-                    icon: Icon(
-                      Icons.settings,
-                      color: Theme.of(context).colorScheme.onInverseSurface,
-                    ),
-                  ),
-                ],
-              ),
+    return SafeArea(
+      top: true,
+      left: false,
+      right: false,
+      bottom: false,
+      child: Scaffold(
+        body: DecoratedBox(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/image/qwixx_background.png'),
+              fit: BoxFit.cover,
             ),
-            Expanded(child: Center(child: _buildContent(context))),
-          ],
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsetsGeometry.only(right: 5),
+                child: Row(
+                  spacing: 5,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: widget.viewModel.nameNotifier,
+                      builder: (context, name, child) {
+                        if (name == null) {
+                          return SizedBox.shrink();
+                        }
+                        return Text(
+                          name,
+                          style: TextTheme.of(context).bodyMedium!.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onInverseSurface,
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      onPressed: () => _dialogBuilder(
+                        context,
+                        SettingsWidget(viewModel: widget.settingsViewModel),
+                      ),
+                      icon: Icon(
+                        Icons.settings,
+                        color: Theme.of(context).colorScheme.onInverseSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(child: Center(child: _buildContent(context))),
+            ],
+          ),
         ),
       ),
     );
