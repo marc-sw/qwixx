@@ -45,8 +45,8 @@ class CardDetailsWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsetsGeometry.only(left: 20),
             child: SizedBox(
-              width: 50,
-              height: 50,
+              width: 45,
+              height: 45,
               child: viewModel.isActor
                   ? CardActionWidget(viewModel: viewModel)
                   : CardStatusWidget(
