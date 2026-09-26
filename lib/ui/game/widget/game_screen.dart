@@ -152,14 +152,17 @@ class _GameScreenState extends State<GameScreen> {
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
                 children: [
+                  SizedBox(width: 30, height: 50),
                   Expanded(
                     child: HeadingWidgetV2(
                       viewModel: widget.viewModel,
                       onTap: (i) => _carouselController.animateToItem(i),
                     ),
                   ),
+
                   IconButton(
                     onPressed: _showResult,
                     icon: Icon(

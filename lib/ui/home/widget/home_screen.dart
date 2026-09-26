@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:qwixx/config/routing.dart';
 import 'package:qwixx/ui/home/view_model/game_discovery_view_model.dart';
 import 'package:qwixx/ui/home/view_model/home_view_model.dart';
@@ -111,8 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Spielen',
-                style: TextTheme.of(context).bodyLarge!.copyWith(
+                textAlign: TextAlign.center,
+                'Qwixx',
+                style: GoogleFonts.alfaSlabOne(
+                  fontSize: 24,
+
                   color: Theme.of(context).colorScheme.onInverseSurface,
                 ),
               ),

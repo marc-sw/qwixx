@@ -22,23 +22,37 @@ class HeadingWidgetV2 extends StatelessWidget {
               .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         );
       },
-      child: Row(
-        spacing: 15,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final entry in viewModel.cardViewModels.asMap().entries)
-            GestureDetector(
-              onTap: () => onTap(entry.key),
-              child: Transform.scale(
-                scale: 2,
-                child: CardStatusWidget(
-                  decorationListenable: entry.value.statusListenable,
-                  isActor: viewModel.playerId == entry.value.player.uuid,
-                ),
-              ),
+      child: Center(
+        child: Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: Colors.black.withAlpha(75),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.hardEdge,
+            child: Row(
+              spacing: 15,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final entry in viewModel.cardViewModels.asMap().entries)
+                  GestureDetector(
+                    onTap: () => onTap(entry.key),
+                    child: Transform.scale(
+                      scale: 2,
+                      child: CardStatusWidget(
+                        decorationListenable: entry.value.statusListenable,
+                        isActor: viewModel.playerId == entry.value.player.uuid,
+                      ),
+                    ),
+                  ),
+              ],
             ),
-        ],
+          ),
+        ),
       ),
     );
   }

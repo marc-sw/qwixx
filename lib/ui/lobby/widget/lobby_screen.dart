@@ -143,8 +143,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                     Expanded(child: _buildAnimated(context, lobby)),
                     const Divider(thickness: 2),
                     Row(
-                      spacing: 15,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
@@ -159,7 +158,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           onPressed: () {
                             widget.viewModel.deleteGateway();
                           },
-                          child: Text('Lobby verlassen'),
+                          child: Text('Verlassen'),
                         ),
 
                         if (lobby.all.length > 1 && widget.viewModel.isHost())
@@ -167,7 +166,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                             onPressed: () {
                               widget.viewModel.createGame();
                             },
-                            child: Text('Spiel starten'),
+                            child: Text('Starten'),
                           ),
                       ],
                     ),
