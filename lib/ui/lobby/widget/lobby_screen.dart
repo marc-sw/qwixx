@@ -111,14 +111,14 @@ class _LobbyScreenState extends State<LobbyScreen> {
                         color: Theme.of(context).colorScheme.onInverseSurface,
                       ),
                       title: Text(
-                        'Spiel von ${lobby.host.name} (${lobby.all.length})',
+                        'Game by ${lobby.host.name} (${lobby.all.length})',
                         style: TextTheme.of(context).bodyLarge!.copyWith(
                           color: Theme.of(context).colorScheme.onInverseSurface,
                         ),
                       ),
                       trailing: widget.viewModel.isHost()
                           ? Tooltip(
-                              message: 'Bot hinzufügen',
+                              message: 'Add Bot',
                               child: TextButton.icon(
                                 onPressed: () {
                                   widget.viewModel.addBot();
@@ -158,7 +158,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           onPressed: () {
                             widget.viewModel.deleteGateway();
                           },
-                          child: Text('Verlassen'),
+                          child: Text('Leave'),
                         ),
 
                         if (lobby.all.length > 1 && widget.viewModel.isHost())
@@ -166,7 +166,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                             onPressed: () {
                               widget.viewModel.createGame();
                             },
-                            child: Text('Starten'),
+                            child: Text('Start'),
                           ),
                       ],
                     ),

@@ -139,7 +139,7 @@ class ResultWidget extends StatelessWidget {
                   onPressed: () {
                     viewModel.deleteGateway();
                   },
-                  child: Text('Spiel verlassen'),
+                  child: Text('Leave game'),
                 ),
 
                 if (isGameOver)
@@ -147,7 +147,7 @@ class ResultWidget extends StatelessWidget {
                     onPressed: () {
                       viewModel.deleteGame();
                     },
-                    child: Text('Nochmal spielen'),
+                    child: Text('Play again'),
                   ),
               ],
             ),

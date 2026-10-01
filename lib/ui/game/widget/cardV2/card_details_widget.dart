@@ -59,7 +59,7 @@ class CardDetailsWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Spieler',
+                'Player',
                 style: TextTheme.of(context).bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.onInverseSurface,
                 ),
@@ -106,7 +106,7 @@ class CardDetailsWidget extends StatelessWidget {
             spacing: 5,
             children: [
               Text(
-                'Fehlwürfe',
+                'Misses',
                 style: TextTheme.of(context).bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.onInverseSurface,
                 ),

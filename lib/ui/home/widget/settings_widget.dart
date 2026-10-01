@@ -33,7 +33,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
       children: [
         ListTile(
           leading: Tooltip(
-            message: 'Speichert automatisch',
+            message: 'Saves automaticly',
             child: Icon(
               Icons.settings,
               color: Theme.of(context).colorScheme.onInverseSurface,

@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSetup(BuildContext context) {
     return ElevatedButton.icon(
       icon: Icon(Icons.settings),
-      label: Text('Name festlegen'),
+      label: Text('Setup name'),
       onPressed: () => _dialogBuilder(
         context,
         SettingsWidget(viewModel: widget.settingsViewModel),
@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   _dialogBuilder(context, _buildLobbyCreator(context));
                 },
-                child: Text('Erstellen'),
+                child: Text('Create'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
-                child: Text('Beitreten'),
+                child: Text('Join'),
               ),
             ],
           ),
@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         ListTile(
           title: Text(
-            'Spiel erstellen',
+            'Create Game',
             style: TextTheme.of(context).bodyLarge!.copyWith(
               color: Theme.of(context).colorScheme.onInverseSurface,
             ),
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 125,
                 child: ElevatedButton(
                   onPressed: widget.viewModel.onSoloLobbyTap,
-                  child: Text('Alleine'),
+                  child: Text('Alone'),
                 ),
               ),
               ValueListenableBuilder(
@@ -205,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 125,
                     child: ElevatedButton(
                       onPressed: widget.viewModel.createMultiplayerGame.run,
-                      child: Text('Mit anderen'),
+                      child: Text('With others'),
                     ),
                   );
                 },

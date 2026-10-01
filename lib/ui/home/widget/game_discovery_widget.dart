@@ -8,29 +8,29 @@ String formatDuration(Duration duration) {
   final s = duration.inSeconds;
   if (s < 60) {
     if (s == 1) {
-      return '$s Sekunde';
+      return '$s second';
     }
-    return '$s Sekunden';
+    return '$s seconds';
   }
   final m = duration.inMinutes;
   if (m < 60) {
     if (m == 1) {
-      return '$m Minute';
+      return '$m minute';
     }
-    return '$m Minuten';
+    return '$m minutes';
   }
   final h = duration.inHours;
   if (h < 24) {
     if (h == 1) {
-      return '$h Stunde';
+      return '$h hour';
     }
-    return '$h Stunden';
+    return '$h hours';
   }
   final d = duration.inDays;
   if (d == 1) {
-    return '$d Tag';
+    return '$d day';
   }
-  return '$d Tagen';
+  return '$d days';
 }
 
 class GameDiscoveryWidget extends StatefulWidget {
@@ -88,14 +88,14 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
         children: [
           Expanded(
             child: Text(
-              'Spiel von ${info.host.name}',
+              'Game by ${info.host.name}',
               style: TextTheme.of(context).bodyLarge!.copyWith(
                 color: Theme.of(context).colorScheme.onInverseSurface,
               ),
             ),
           ),
           Text(
-            'vor $formatted',
+            '$formatted ago',
             style: TextTheme.of(context).bodyLarge!.copyWith(
               color: Theme.of(context).colorScheme.onInverseSurface,
             ),
@@ -123,7 +123,7 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
             color: Theme.of(context).colorScheme.onInverseSurface,
           ),
           title: Text(
-            'Suche Spiele',
+            'Searching games',
             style: TextTheme.of(context).bodyLarge!.copyWith(
               color: Theme.of(context).colorScheme.onInverseSurface,
             ),

@@ -17,7 +17,7 @@ class HeadingWidgetV2 extends StatelessWidget {
           return child!;
         }
         return Text(
-          'Spiel vorbei',
+          'Game over',
           style: TextTheme.of(context).headlineSmall!
               .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         );

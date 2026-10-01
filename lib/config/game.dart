@@ -8,8 +8,8 @@ abstract class GameConfig {
   static const int gameOverColoredDiceCount = 2;
   static const int lowestNumber = 2;
   static const int highestNumber = 12;
-  static const int botActionMinDelay = 3000;
-  static const int botActionVarDelay = 4000;
+  static const int botActionMinDelay = 2000;
+  static const int botActionVarDelay = 2000;
   static const int botRollMinDelay = 2000;
   static const int botRollVarDelay = 1000;
 }
