@@ -6,6 +6,7 @@ import 'package:qwixx/ui/home/view_model/game_discovery_view_model.dart';
 import 'package:qwixx/ui/home/view_model/home_view_model.dart';
 import 'package:qwixx/ui/home/view_model/settings_view_model.dart';
 import 'package:qwixx/ui/home/widget/game_discovery_widget.dart';
+import 'package:qwixx/ui/home/widget/game_rules.dart';
 import 'package:qwixx/ui/home/widget/settings_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -74,14 +75,13 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: Colors.transparent,
           insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusGeometry.circular(12),
           ),
           constraints: BoxConstraints.loose(Size(400, 600)),
           child: Card(
-            color: Colors.transparent,
+            //color: Colors.transparent,
             child: Padding(padding: const EdgeInsets.all(8.0), child: child),
           ),
         );
@@ -104,42 +104,46 @@ class _HomeScreenState extends State<HomeScreen> {
     return ConstrainedBox(
       constraints: BoxConstraints.loose(Size.fromWidth(150)),
       child: Card(
-        color: Colors.transparent,
+        color: Theme.of(context).colorScheme.surfaceContainer,
         child: Padding(
           padding: const EdgeInsetsGeometry.all(12),
-          child: Column(
-            spacing: 5,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                textAlign: TextAlign.center,
-                'Qwixx',
-                style: GoogleFonts.alfaSlabOne(
-                  fontSize: 24,
-
-                  color: Theme.of(context).colorScheme.onInverseSurface,
+          child: IntrinsicWidth(
+            child: Column(
+              spacing: 5,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  textAlign: TextAlign.center,
+                  'Qwixx',
+                  style: GoogleFonts.alfaSlabOne(fontSize: 24),
                 ),
-              ),
-              const Divider(thickness: 2),
-              ElevatedButton(
-                onPressed: () {
-                  _dialogBuilder(context, _buildLobbyCreator(context));
-                },
-                child: Text('Create'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _dialogBuilder(
-                    context,
-                    GameDiscoveryWidget(
-                      viewModel: widget.gameDiscoveryViewModel,
-                      runOnStart: true,
-                    ),
-                  );
-                },
-                child: Text('Join'),
-              ),
-            ],
+                const Divider(thickness: 2),
+                ElevatedButton(
+                  onPressed: () {
+                    _dialogBuilder(context, _buildLobbyCreator(context));
+                  },
+                  child: Text('Create'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _dialogBuilder(
+                      context,
+                      GameDiscoveryWidget(
+                        viewModel: widget.gameDiscoveryViewModel,
+                        runOnStart: true,
+                      ),
+                    );
+                  },
+                  child: Text('Join'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _dialogBuilder(context, GameRulesWidget());
+                  },
+                  child: Text('Game Rules'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -166,18 +170,10 @@ class _HomeScreenState extends State<HomeScreen> {
       spacing: 10,
       children: [
         ListTile(
-          title: Text(
-            'Create Game',
-            style: TextTheme.of(context).bodyLarge!.copyWith(
-              color: Theme.of(context).colorScheme.onInverseSurface,
-            ),
-          ),
+          title: Text('Create Game', style: TextTheme.of(context).bodyLarge),
           trailing: IconButton(
             onPressed: Navigator.of(context).pop,
-            icon: Icon(
-              Icons.close,
-              color: Theme.of(context).colorScheme.onInverseSurface,
-            ),
+            icon: Icon(Icons.close),
           ),
         ),
         const Divider(thickness: 2),
@@ -248,11 +244,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                         return Text(
                           name,
-                          style: TextTheme.of(context).bodyMedium!.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onInverseSurface,
-                          ),
+                          style: TextTheme.of(context).bodyMedium!
+                              .copyWith(color: Colors.white),
                         );
                       },
                     ),
@@ -261,10 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         SettingsWidget(viewModel: widget.settingsViewModel),
                       ),
-                      icon: Icon(
-                        Icons.settings,
-                        color: Theme.of(context).colorScheme.onInverseSurface,
-                      ),
+                      icon: Icon(Icons.settings, color: Colors.white),
                     ),
                   ],
                 ),
@@ -277,9 +267,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-/*Padding(
-            padding: EdgeInsets.only(right: 6),
-            child: ,
-          ),
-          ,*/

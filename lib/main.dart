@@ -19,11 +19,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: Colors.blue,
+      brightness: Brightness.light,
+    );
     return MaterialApp.router(
       routerConfig: router,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        textTheme: GoogleFonts.averageSansTextTheme(),
+        colorScheme: colorScheme,
+        textTheme: GoogleFonts.averageSansTextTheme(
+          ThemeData.from(colorScheme: colorScheme).textTheme,
+        ),
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
       debugShowCheckedModeBanner: false,
     );

@@ -19,14 +19,15 @@ class HeadingWidgetV2 extends StatelessWidget {
         return Text(
           'Game over',
           style: TextTheme.of(context).headlineSmall!
-              .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+              .copyWith(color: Colors.white),
+          textAlign: TextAlign.center,
         );
       },
       child: Center(
         child: Container(
           height: 50,
           decoration: BoxDecoration(
-            color: Colors.black.withAlpha(75),
+            color: Theme.of(context).colorScheme.surface.withAlpha(75),
             borderRadius: BorderRadius.circular(6),
           ),
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 3),

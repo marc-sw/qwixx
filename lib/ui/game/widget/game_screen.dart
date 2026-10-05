@@ -165,10 +165,7 @@ class _GameScreenState extends State<GameScreen> {
 
                   IconButton(
                     onPressed: _showResult,
-                    icon: Icon(
-                      Icons.leaderboard,
-                      color: Theme.of(context).colorScheme.onInverseSurface,
-                    ),
+                    icon: Icon(Icons.leaderboard, color: Colors.white),
                   ),
                 ],
               ),

@@ -12,7 +12,7 @@ class CardWidgetV2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       child: Card(
-        color: Colors.transparent,
+        color: Theme.of(context).colorScheme.surface,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

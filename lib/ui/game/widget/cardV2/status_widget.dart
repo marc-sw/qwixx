@@ -8,10 +8,10 @@ class CardStatusWidget extends StatelessWidget {
     required this.decorationListenable,
     this.scale = 1,
     bool isActor = false,
-  }) : color = isActor ? Colors.green : Colors.white;
+  }) : color = isActor ? Colors.green : null;
 
-  final double scale;
   final Color? color;
+  final double scale;
   final ValueListenable<StatusDecoration> decorationListenable;
 
   @override

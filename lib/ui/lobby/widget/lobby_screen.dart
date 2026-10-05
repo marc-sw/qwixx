@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qwixx/config/routing.dart';
+import 'package:qwixx/domain/gateway/server_gateway_controller.dart';
 import 'package:qwixx/domain/lobby/lobby.dart';
 import 'package:qwixx/domain/lobby/player.dart';
 import 'package:qwixx/ui/lobby/view_model/lobby_view_model.dart';
@@ -96,7 +97,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
       constraints: BoxConstraints.loose(Size(500, 700)),
       child: SizedBox.expand(
         child: Card(
-          color: Colors.transparent,
           margin: EdgeInsets.all(16),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -106,16 +106,26 @@ class _LobbyScreenState extends State<LobbyScreen> {
                 return Column(
                   children: [
                     ListTile(
-                      leading: Icon(
-                        Icons.group,
-                        color: Theme.of(context).colorScheme.onInverseSurface,
-                      ),
+                      leading: Icon(Icons.group),
                       title: Text(
                         'Game by ${lobby.host.name} (${lobby.all.length})',
-                        style: TextTheme.of(context).bodyLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.onInverseSurface,
-                        ),
+                        style: TextTheme.of(context).bodyLarge,
                       ),
+                      subtitle:
+                          widget.viewModel.gateway is ServerGatewayController
+                          ? Dismissible(
+                              key: ValueKey('LOCAL_NETWORK_HOST_DISCLAIMER'),
+                              child: Text(
+                                'Other devices on your local network can join the game',
+                                style: TextTheme.of(context).bodySmall!
+                                    .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .error,
+                                    ),
+                              ),
+                            )
+                          : null,
                       trailing: widget.viewModel.isHost()
                           ? Tooltip(
                               message: 'Add Bot',
@@ -123,18 +133,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 onPressed: () {
                                   widget.viewModel.addBot();
                                 },
-                                label: Icon(
-                                  Icons.smart_toy,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onInverseSurface,
-                                ),
-                                icon: Icon(
-                                  Icons.add,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onInverseSurface,
-                                ),
+                                label: Icon(Icons.smart_toy),
+                                icon: Icon(Icons.add),
                               ),
                             )
                           : null,
@@ -147,7 +147,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
                       children: [
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainer,
                             foregroundColor: Theme.of(context)
                                 .colorScheme
                                 .error,

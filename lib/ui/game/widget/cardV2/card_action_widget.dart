@@ -21,40 +21,28 @@ class CardActionWidget extends StatelessWidget {
           ),
           StatusDecoration.skipable => GestureDetector(
             onTap: viewModel.onSkipTap,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: _scaled(Icon(Icons.done, color: Colors.green))
-                  .animate(
-                    onPlay: (controller) => controller.repeat(reverse: true),
-                  )
-                  .fade(
-                    duration: const Duration(milliseconds: 750),
-                    begin: 0.1,
-                    curve: Curves.easeInOutQuad,
-                  ),
-            ),
+            child: _scaled(Icon(Icons.done, color: Colors.green))
+                .animate(
+                  onPlay: (controller) => controller.repeat(reverse: true),
+                )
+                .fade(
+                  duration: const Duration(milliseconds: 750),
+                  begin: 0.1,
+                  curve: Curves.easeInOutQuad,
+                ),
           ),
           StatusDecoration.penable => SizedBox.shrink(),
           StatusDecoration.rollable => GestureDetector(
             onTap: viewModel.onRollTap,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: _scaled(Icon(Icons.casino, color: Colors.green))
-                  .animate(
-                    onPlay: (controller) => controller.repeat(reverse: true),
-                  )
-                  .fade(
-                    duration: const Duration(milliseconds: 750),
-                    begin: 0.1,
-                    curve: Curves.easeInOutQuad,
-                  ),
-            ),
+            child: _scaled(Icon(Icons.casino, color: Colors.green))
+                .animate(
+                  onPlay: (controller) => controller.repeat(reverse: true),
+                )
+                .fade(
+                  duration: const Duration(milliseconds: 750),
+                  begin: 0.1,
+                  curve: Curves.easeInOutQuad,
+                ),
           ),
         };
       },

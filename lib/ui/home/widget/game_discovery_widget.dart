@@ -89,23 +89,13 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
           Expanded(
             child: Text(
               'Game by ${info.host.name}',
-              style: TextTheme.of(context).bodyLarge!.copyWith(
-                color: Theme.of(context).colorScheme.onInverseSurface,
-              ),
+              style: TextTheme.of(context).bodyLarge,
             ),
           ),
-          Text(
-            '$formatted ago',
-            style: TextTheme.of(context).bodyLarge!.copyWith(
-              color: Theme.of(context).colorScheme.onInverseSurface,
-            ),
-          ),
+          Text('$formatted ago', style: TextTheme.of(context).bodyLarge),
           IconButton(
             onPressed: () => widget.viewModel.joinGameCommand.run(info),
-            icon: Icon(
-              Icons.login,
-              color: Theme.of(context).colorScheme.onInverseSurface,
-            ),
+            icon: Icon(Icons.login),
           ),
         ],
       ),
@@ -118,22 +108,23 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
       spacing: 10,
       children: [
         ListTile(
-          leading: Icon(
-            Icons.wifi_find,
-            color: Theme.of(context).colorScheme.onInverseSurface,
-          ),
+          leading: Icon(Icons.wifi_find),
           title: Text(
-            'Searching games',
-            style: TextTheme.of(context).bodyLarge!.copyWith(
-              color: Theme.of(context).colorScheme.onInverseSurface,
+            'Searching local games',
+            style: TextTheme.of(context).bodyLarge,
+          ),
+
+          subtitle: Dismissible(
+            key: ValueKey('LOCAL_NETWORK_DISCLAIMER'),
+            child: Text(
+              'Make sure another device is hosting the game on your local network',
+              style: TextTheme.of(context).bodySmall!
+                  .copyWith(color: Theme.of(context).colorScheme.error),
             ),
           ),
           trailing: IconButton(
             onPressed: Navigator.of(context).pop,
-            icon: Icon(
-              Icons.close,
-              color: Theme.of(context).colorScheme.onInverseSurface,
-            ),
+            icon: Icon(Icons.close),
           ),
         ),
         ValueListenableBuilder(

@@ -34,23 +34,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         ListTile(
           leading: Tooltip(
             message: 'Saves automaticly',
-            child: Icon(
-              Icons.settings,
-              color: Theme.of(context).colorScheme.onInverseSurface,
-            ),
+            child: Icon(Icons.settings),
           ),
-          title: Text(
-            'Settings',
-            style: TextTheme.of(context).bodyLarge!.copyWith(
-              color: Theme.of(context).colorScheme.onInverseSurface,
-            ),
-          ),
+          title: Text('Settings', style: TextTheme.of(context).bodyLarge),
           trailing: IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.close,
-              color: Theme.of(context).colorScheme.onInverseSurface,
-            ),
+            icon: Icon(Icons.close),
           ),
         ),
         const Divider(),
@@ -58,12 +47,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           child: ListView(
             padding: EdgeInsets.all(8),
             children: [
-              Text(
-                'Account',
-                style: TextTheme.of(context).bodyLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onInverseSurface,
-                ),
-              ),
+              Text('Account', style: TextTheme.of(context).bodyLarge),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -78,9 +62,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_outline),
                         filled: true,
-                        fillColor: Theme.of(context)
-                            .colorScheme
-                            .surfaceContainerHighest,
+
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(6),
                           borderSide: BorderSide.none,

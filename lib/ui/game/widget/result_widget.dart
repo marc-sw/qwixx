@@ -23,70 +23,56 @@ class ResultWidget extends StatelessWidget {
       shrinkWrap: true,
       itemCount: playerScores.length,
       separatorBuilder: (context, index) {
-        return SizedBox(height: 10);
+        return SizedBox(height: 4);
       },
-      itemBuilder: (context, index) => Container(
-        decoration: BoxDecoration(
-          //color: Colors.grey.shade300,
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade400,
-              blurRadius: 2,
-              spreadRadius: 2,
-              offset: Offset(0, 3),
+      itemBuilder: (context, index) => ListTile(
+        tileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+        leading: Icon(index == 0 ? Icons.emoji_events : Icons.assist_walker),
+        title: Row(
+          spacing: 5,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(fromPlayerKind(playerScores[index].player.kind)),
+            Text(
+              playerScores[index].player.name,
+              style: TextTheme.of(context).bodyLarge!.copyWith(
+                color: playerScores[index].player.uuid == viewModel.playerId
+                    ? Colors.green
+                    : null,
+              ),
             ),
           ],
         ),
-        child: ListTile(
-          leading: Icon(index == 0 ? Icons.emoji_events : Icons.assist_walker),
-          title: Row(
-            spacing: 5,
-            mainAxisSize: MainAxisSize.min,
+        subtitle: RichText(
+          text: TextSpan(
+            style: Theme.of(context).textTheme.bodyLarge,
             children: [
-              Icon(fromPlayerKind(playerScores[index].player.kind)),
-              Text(
-                playerScores[index].player.name,
-                style: TextTheme.of(context).bodyLarge!.copyWith(
-                  color: playerScores[index].player.uuid == viewModel.playerId
-                      ? Colors.green
-                      : null,
-                ),
+              TextSpan(
+                text: playerScores[index].red.toString(),
+                style: TextStyle(color: fromQwixx(GameColor.red)),
               ),
+              const TextSpan(text: ' + '),
+              TextSpan(
+                text: playerScores[index].yellow.toString(),
+                style: TextStyle(color: fromQwixx(GameColor.yellow)),
+              ),
+              const TextSpan(text: ' + '),
+              TextSpan(
+                text: playerScores[index].green.toString(),
+                style: TextStyle(color: fromQwixx(GameColor.green)),
+              ),
+              const TextSpan(text: ' + '),
+              TextSpan(
+                text: playerScores[index].blue.toString(),
+                style: TextStyle(color: fromQwixx(GameColor.blue)),
+              ),
+              TextSpan(text: ' - ${playerScores[index].fails}'),
             ],
           ),
-          subtitle: RichText(
-            text: TextSpan(
-              style: Theme.of(context).textTheme.bodyLarge,
-              children: [
-                TextSpan(
-                  text: playerScores[index].red.toString(),
-                  style: TextStyle(color: fromQwixx(GameColor.red)),
-                ),
-                const TextSpan(text: ' + '),
-                TextSpan(
-                  text: playerScores[index].yellow.toString(),
-                  style: TextStyle(color: fromQwixx(GameColor.yellow)),
-                ),
-                const TextSpan(text: ' + '),
-                TextSpan(
-                  text: playerScores[index].green.toString(),
-                  style: TextStyle(color: fromQwixx(GameColor.green)),
-                ),
-                const TextSpan(text: ' + '),
-                TextSpan(
-                  text: playerScores[index].blue.toString(),
-                  style: TextStyle(color: fromQwixx(GameColor.blue)),
-                ),
-                TextSpan(text: ' - ${playerScores[index].fails}'),
-              ],
-            ),
-          ), //Text('5 + 4 + 3 + 17 - 15'),
-          trailing: Text(
-            '${playerScores[index].score}',
-            style: TextTheme.of(context).headlineSmall,
-          ),
+        ), //Text('5 + 4 + 3 + 17 - 15'),
+        trailing: Text(
+          '${playerScores[index].score}',
+          style: TextTheme.of(context).headlineSmall,
         ),
       ),
     );
@@ -95,7 +81,6 @@ class ResultWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -103,22 +88,14 @@ class ResultWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(
-                Icons.leaderboard,
-                color: Theme.of(context).colorScheme.onInverseSurface,
-              ),
+              leading: Icon(Icons.leaderboard),
               title: Text(
                 'Leaderboard',
-                style: TextTheme.of(context).headlineSmall!.copyWith(
-                  color: Theme.of(context).colorScheme.onInverseSurface,
-                ),
+                style: TextTheme.of(context).headlineSmall,
               ),
               trailing: IconButton(
                 onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(
-                  Icons.close,
-                  color: Theme.of(context).colorScheme.onInverseSurface,
-                ),
+                icon: Icon(Icons.close),
               ),
             ),
             const Divider(thickness: 2),
@@ -130,7 +107,6 @@ class ResultWidget extends StatelessWidget {
               children: [
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
                     foregroundColor: Theme.of(context).colorScheme.error,
                     side: BorderSide(
                       color: Theme.of(context).colorScheme.error,
