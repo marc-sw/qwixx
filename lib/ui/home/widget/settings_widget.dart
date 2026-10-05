@@ -81,6 +81,17 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   ],
                 ),
               ),
+              /*Padding(padding: EdgeInsetsGeometry.only(top: 10)),
+              Text('Appearance', style: TextTheme.of(context).bodyLarge),
+              Padding(
+                padding: EdgeInsetsGeometry.all(8),
+                child: Row(
+                  children: [
+                    Text('Light'),
+                    Switch(value: false, onChanged: (value) => {}),
+                  ],
+                ),
+              ),*/
             ],
           ),
         ),

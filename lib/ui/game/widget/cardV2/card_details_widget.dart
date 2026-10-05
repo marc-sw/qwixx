@@ -62,10 +62,7 @@ class CardDetailsWidget extends StatelessWidget {
                 child: Row(
                   spacing: 3,
                   children: [
-                    Icon(
-                      fromPlayerKind(viewModel.player.kind),
-                      color: Theme.of(context).colorScheme.onInverseSurface,
-                    ),
+                    Icon(fromPlayerKind(viewModel.player.kind)),
                     Text(
                       viewModel.player.name,
                       style: TextTheme.of(context).bodyLarge!.copyWith(
