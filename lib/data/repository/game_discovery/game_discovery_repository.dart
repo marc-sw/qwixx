@@ -74,6 +74,33 @@ class GameDiscoveryRepository {
     }
   }
 
+  Future<Result<List<ServerInfo>>> getServerInfos(Duration duration) async {
+    final List<ServerInfo> infos = [];
+    try {
+      await stopDiscovering();
+      final discovery = await _service.startGameDiscovery().getOrThrow();
+      discovery.addServiceListener((service, status) {
+        final infoUpdate = parseServerInfo(service);
+        if (status == ServiceStatus.found) {
+          infos.add(infoUpdate);
+        } else {
+          final index = infos.indexWhere(
+            (info) =>
+                info.serverAddress == infoUpdate.serverAddress &&
+                info.serverPort == infoUpdate.serverPort,
+          );
+          if (index != -1) {
+            infos.removeAt(index);
+          }
+        }
+      });
+      await Future.delayed(duration, () async => await stopDiscovering());
+      return infos.toSuccess();
+    } on Exception catch (e) {
+      return e.toFailure();
+    }
+  }
+
   void _onServiceChanged(Service service, ServiceStatus status) {
     final info = parseServerInfo(service);
     bool added = status == ServiceStatus.found;

@@ -52,15 +52,7 @@ class _GameRulesWidgetState extends State<GameRulesWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Align(
-          alignment: AlignmentGeometry.centerRight,
-          child: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.close),
-          ),
-        ),
         Row(
-          spacing: 10,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Visibility(
@@ -73,7 +65,7 @@ class _GameRulesWidgetState extends State<GameRulesWidget> {
                 icon: Icon(Icons.arrow_back_ios),
               ),
             ),
-            Text('Game Rules', style: TextTheme.of(context).headlineSmall),
+            Text('Qwixx Rules', style: TextTheme.of(context).bodyLarge),
             Visibility(
               visible: page + 1 < pageCount,
               maintainSize: true,

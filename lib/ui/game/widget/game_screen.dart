@@ -120,7 +120,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Widget _buildContent(BuildContext context) {
-    final ratio = MediaQuery.of(context).size.aspectRatio;
+    final ratio = MediaQuery.sizeOf(context).aspectRatio;
     if (ratio > 1.6) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -134,7 +134,7 @@ class _GameScreenState extends State<GameScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(child: _buildControls(context)),
-        Expanded(child: _buildCards(context)),
+        Expanded(flex: 3, child: _buildCards(context)),
       ],
     );
   }

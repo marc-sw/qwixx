@@ -23,11 +23,16 @@ class GameDiscoveryViewModel {
   late final searchGamesCommand =
       Command.createAsyncNoParamNoResultWithProgress(_searchGames);
 
+  late final getGamesCommand = Command.createAsync<Duration, List<ServerInfo>>(
+    _getServerInfos,
+    initialValue: [],
+  );
+
   new(this._gameDiscovery, this._session, this._gameClientService)
     : _serverInfosNotifier = ValueNotifier([]) {
     searchGamesCommand.isCanceled.addListener(() {
       if (searchGamesCommand.isCanceled.value) {
-        _stopSearching();
+        stopSearching();
       }
     });
   }
@@ -67,11 +72,16 @@ class GameDiscoveryViewModel {
     );
   }
 
+  Future<List<ServerInfo>> _getServerInfos(Duration duration) async {
+    return await _gameDiscovery.getServerInfos(duration).getOrThrow();
+  }
+
   Future<void> _searchGames(ProgressHandle handle) async {
     for (var i = _serverInfosNotifier.value.length - 1; i >= 0; i--) {
       _remove(i);
     }
     final stream = await _gameDiscovery.startDiscovering().getOrThrow();
+    Future.delayed(const Duration(milliseconds: 2000), () => stopSearching());
     await for (final data in stream) {
       if (data.added) {
         _add(data.info);
@@ -88,7 +98,7 @@ class GameDiscoveryViewModel {
     }
   }
 
-  void _stopSearching() async {
+  void stopSearching() async {
     await _gameDiscovery.stopDiscovering();
   }
 }

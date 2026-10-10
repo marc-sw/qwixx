@@ -51,7 +51,7 @@ class CardTileWidget extends StatelessWidget {
             Text(
               viewModel.tile.number.toString(),
               style: GoogleFonts.alfaSlabOne(
-                fontSize: 34,
+                fontSize: 28,
                 color: viewModel.color,
               ),
             ),

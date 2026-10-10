@@ -37,10 +37,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             child: Icon(Icons.settings),
           ),
           title: Text('Settings', style: TextTheme.of(context).bodyLarge),
-          trailing: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.close),
-          ),
         ),
         const Divider(),
         Expanded(

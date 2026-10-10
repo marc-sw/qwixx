@@ -114,14 +114,14 @@ class _GameDiscoveryWidgetState extends State<GameDiscoveryWidget> {
             style: TextTheme.of(context).bodyLarge,
           ),
 
-          subtitle: Dismissible(
+          /*subtitle: Dismissible(
             key: ValueKey('LOCAL_NETWORK_DISCLAIMER'),
             child: Text(
               'Make sure another device is hosting the game on your local network',
               style: TextTheme.of(context).bodySmall!
                   .copyWith(color: Theme.of(context).colorScheme.error),
             ),
-          ),
+          ),*/
           trailing: IconButton(
             onPressed: Navigator.of(context).pop,
             icon: Icon(Icons.close),

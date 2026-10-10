@@ -5,8 +5,9 @@ import 'package:qwixx/config/routing.dart';
 import 'package:qwixx/ui/home/view_model/game_discovery_view_model.dart';
 import 'package:qwixx/ui/home/view_model/home_view_model.dart';
 import 'package:qwixx/ui/home/view_model/settings_view_model.dart';
-import 'package:qwixx/ui/home/widget/game_discovery_widget.dart';
+import 'package:qwixx/ui/home/widget/game_discovery_v2.dart';
 import 'package:qwixx/ui/home/widget/game_rules.dart';
+import 'package:qwixx/ui/home/widget/pop_card.dart';
 import 'package:qwixx/ui/home/widget/settings_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -80,10 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadiusGeometry.circular(12),
           ),
           constraints: BoxConstraints.loose(Size(400, 600)),
-          child: Card(
-            //color: Colors.transparent,
-            child: Padding(padding: const EdgeInsets.all(8.0), child: child),
-          ),
+          child: PopCard(child: child),
         );
       },
     );
@@ -102,48 +100,47 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildActionsV2(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints.loose(Size.fromWidth(150)),
+      constraints: BoxConstraints.loose(Size.fromWidth(200)),
       child: Card(
         color: Theme.of(context).colorScheme.surfaceContainer,
         child: Padding(
           padding: const EdgeInsetsGeometry.all(12),
-          child: IntrinsicWidth(
-            child: Column(
-              spacing: 5,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  textAlign: TextAlign.center,
-                  'Qwixx',
-                  style: GoogleFonts.alfaSlabOne(fontSize: 24),
-                ),
-                const Divider(thickness: 2),
-                ElevatedButton(
-                  onPressed: () {
-                    _dialogBuilder(context, _buildLobbyCreator(context));
-                  },
-                  child: Text('Create'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _dialogBuilder(
-                      context,
-                      GameDiscoveryWidget(
-                        viewModel: widget.gameDiscoveryViewModel,
-                        runOnStart: true,
-                      ),
-                    );
-                  },
-                  child: Text('Join'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _dialogBuilder(context, GameRulesWidget());
-                  },
-                  child: Text('Game Rules'),
-                ),
-              ],
-            ),
+          child: Column(
+            spacing: 5,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                textAlign: TextAlign.center,
+                'Qwixx',
+                style: GoogleFonts.alfaSlabOne(fontSize: 24),
+              ),
+              const Divider(thickness: 2),
+              ElevatedButton(
+                onPressed: () {
+                  _dialogBuilder(context, _buildLobbyCreator(context));
+                },
+                child: Text('Create'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _dialogBuilder(
+                    context,
+                    GameDiscoveryV2(viewModel: widget.gameDiscoveryViewModel),
+                    /*GameDiscoveryWidget(
+                      viewModel: widget.gameDiscoveryViewModel,
+                      runOnStart: true,
+                    ),*/
+                  );
+                },
+                child: Text('Join'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _dialogBuilder(context, const GameRulesWidget());
+                },
+                child: Text('Game Rules'),
+              ),
+            ],
           ),
         ),
       ),
@@ -171,10 +168,6 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         ListTile(
           title: Text('Create Game', style: TextTheme.of(context).bodyLarge),
-          trailing: IconButton(
-            onPressed: Navigator.of(context).pop,
-            icon: Icon(Icons.close),
-          ),
         ),
         const Divider(thickness: 2),
         Padding(
